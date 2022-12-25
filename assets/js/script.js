@@ -29,8 +29,8 @@ function type() {
     } else {
         text = '';
     }
-};
+}
 
-document.addEventListener("DOMContentLoaded", setTimeout(function() {
+document.addEventListener("DOMContentLoaded", () => setTimeout(function() {
 	type();
 }, 1000));
