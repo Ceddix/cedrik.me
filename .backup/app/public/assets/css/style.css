@@ -25,7 +25,7 @@ body {
 
 .background-image {
     /* Image */
-    background-image: url("../imgs/pfp-normal.png");
+    background-image: url("public/assets/imgs/pfp-normal.png");
     /* Image Properties */
     background-position: center;
     background-repeat: no-repeat;
@@ -85,7 +85,6 @@ header nav .header_links ul li a:hover {
 }
 
 /* Main */
-
 section.main {
     display: flex;
     flex-direction: column;
@@ -96,21 +95,37 @@ section.main {
     animation: fadeInUp .8s;
 }
 
-section.main img {
+.avatar {
     transition: all 0.5s ease;
-		width: 150px;
-    height: 150px;
-    border-radius: 100%;
-    object-fit: cover;
-    border: 10px solid #21222b93;
+    position: relative;
+    display: inline-block;
     cursor: pointer;
     margin-bottom: 10px;
 }
 
-section.main img:hover {
+.avatar:hover {
     -ms-transform: scale(1.075);
     transform: scale(1.075);
     transition: all 0.5s ease;
+}
+
+.avatar-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 100%;
+    border: 10px solid #21222b93;
+}
+
+.avatar-status {
+    width: 20px;
+    height: 20px;
+    background: #99CC00;
+    filter: drop-shadow(0 0 3px #99CC00);
+    position: absolute;
+    bottom: 8%;
+    right: 8%;
+    border-radius: 100%;
 }
 
 section.main span {
@@ -123,7 +138,7 @@ section.main span {
     position: relative;
     top: 50%;
     color: #94a1b2;
-    font-size: 16px;
+    font-size: 17px;
 		font-family: "Poppins", sans-serif;
 		vertical-align: text-bottom;
 		width: 32rem;

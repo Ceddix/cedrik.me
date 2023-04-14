@@ -1,4 +1,4 @@
-var socket;
+/*var socket;
 if (window.location.host.indexOf('localhost') === -1) {
     socket = io('https://ceddix.de');
 } else {
@@ -13,7 +13,7 @@ socket.on('lanyard-data', (lanyardData) => {
     console.log(lanyardData);
     lanyardData = JSON.parse(lanyardData)
     document.getElementById('listening_to_spotify').innerHTML = lanyardData.data.listening_to_spotify ? 'Ja' : 'Nein';
-});
+});*/
 
 // Calculate Age
 const getAge = (birthDateString) => {
