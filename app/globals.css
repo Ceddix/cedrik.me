@@ -1,0 +1,23 @@
+/* Fontawesome */
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css";
+
+/* Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+    padding: 0;
+    margin: 0;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #16161a;
+    color: #fff;
+}
+
+/* Cursor */
+.typed-cursor {
+    color: rgba(255, 255, 255, .75);
+}
