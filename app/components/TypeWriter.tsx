@@ -3,7 +3,7 @@
 import React from 'react';
 import Typed from 'typed.js';
 
-export default function Typewriter(props) {
+export default function TypeWriter(props: any) {
     // Create reference to store the DOM element containing the animation
     const el = React.useRef(null);
 
@@ -15,12 +15,17 @@ export default function Typewriter(props) {
             typeSpeed: props.typeSpeed ?? 50,
             startDelay: props.startDelay ?? 0,
 
+            onComplete: () => {
+                console.log('completed')
+            }
+
         });
 
         return () => {
             // Destroy Typed instance during cleanup to stop animation
             typed.destroy();
         };
+
     }, []);
 
     return (
