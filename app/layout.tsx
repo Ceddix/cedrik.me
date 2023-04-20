@@ -1,6 +1,8 @@
 import './globals.css'
 import Image from "next/image";
 import { Poppins } from "next/font/google";
+import {NavBar} from "@/app/components/NavBar";
+import React from "react";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -40,6 +42,8 @@ export default function RootLayout({
         />
 
         <div className={`h-screen backdrop-blur-2xl bg-[#16161A]/80 shadow-inner`} style={{ boxShadow: "inset 0 0 20px 1px #141417" }}>
+
+            <NavBar/>
 
             {children}
 
