@@ -43,7 +43,7 @@ export default function RootLayout({
 
         <div className={`h-screen backdrop-blur-2xl bg-[#16161A]/80 shadow-inner`} style={{ boxShadow: "inset 0 0 20px 1px #141417" }}>
 
-            <NavBar/>
+            {/*<NavBar/>*/}
 
             {children}
 
