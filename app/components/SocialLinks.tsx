@@ -18,7 +18,8 @@ export default function SocialLinks() {
     })
 
     return (
-        <ul ref={scope} className={`flex flex-row pt-2 text-2xl text-[#a6a8b8] [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 [&_li:hover]:text-white text`}>
+        <ul ref={scope}
+            className={`flex flex-row text-2xl text-[#a6a8b8] [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 hover:[&_li]:text-white focus:[&_a]:outline-none focus:[&_a]:ring-0 focus:[&_a]:text-white`}>
             <li>
                 <a target="_blank" href="https://github.com/Ceddix">
                     <i className={`fab fa-github`}></i>
