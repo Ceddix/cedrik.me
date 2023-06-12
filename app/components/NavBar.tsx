@@ -2,12 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {motion} from 'framer-motion';
+import { motion } from 'framer-motion';
+import { usePathname } from "next/navigation";
+import { useKeyPress } from "ahooks";
 
 const links = [
-    { href: "", label: "Home" },
-    { href: "about", label: "About Me" },
-    { href: "contact", label: "Contact" }
+    {href: "/", label: "Home"},
+    {href: "/about", label: "About Me"},
+    {href: "/contact", label: "Contact"}
 ];
 
 export const NavBar = () => {
