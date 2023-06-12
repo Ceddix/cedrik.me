@@ -3,16 +3,8 @@
 import React, { useEffect } from 'react';
 import { useAnimate, stagger } from 'framer-motion';
 
-// initial="hidden"
-// whileInView="visible"
-// viewport={{ once: true }}
-// transition={{ duration: 0.3, delay: 7.8 }}
-// variants={{
-//     visible: { opacity: 1, y: 0 },
-//     hidden: { opacity: 0, y: -10 }
-// }}
-
 export default function SocialLinks() {
+
     const [scope, animate] = useAnimate()
 
     useEffect(() => {

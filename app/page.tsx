@@ -13,36 +13,37 @@ const poppins = Poppins({
 })
 
 export default function Home() {
-  return (
+    return (
 
-      // Navbar (delay with text)
-      // Activity
+        // Navbar (delay with text)
+        // Activity
 
-      <>
+        <>
 
-          <PageWrapper>
+            <PageWrapper>
 
-              <main className={"flex flex-col justify-center items-center text-center min-h-[70vh]"}>
+                <main className={"flex flex-col justify-center items-center text-center min-h-[70vh]"}>
 
-                  <Image
-                      src={`/profile.png`}
-                      alt={`profile`}
-                      className={`inline-block object-cover rounded-full border-[10px] border-[#21222b93] mb-2.5 cursor-pointer transition transform duration-500 hover:scale-105`}
-                      quality={100}
-                      width={170}
-                      height={170}/>
+                    <Image
+                        src={`/profile.png`}
+                        alt={`profile`}
+                        className={`inline-block object-cover rounded-full border-[10px] border-[#21222b93] mb-2.5 cursor-pointer transition transform duration-500 hover:scale-105`}
+                        quality={100}
+                        width={170}
+                        height={170}
+                    />
 
-                  <h1 className={`text-3xl font-bold pb-1`}>Cedrik Secic</h1>
+                    <h1 className={`text-3xl font-bold pb-1`}>Cedrik Secic</h1>
 
                   <TypeWriter text={`Hi, I'm Cedrik! I'm a ${age.toString()} y/o student from Belgium!`} typeSpeed={80}
                               startDelay={500} className={`text-[18px] text-[#94a1b2]`}/>
 
-                  <SocialLinks/>
+                    <SocialLinks/>
 
-              </main>
+                </main>
 
-          </PageWrapper>
+            </PageWrapper>
 
-      </>
-  )
+        </>
+    )
 }

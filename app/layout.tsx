@@ -1,7 +1,7 @@
 import './globals.css'
 import Image from "next/image";
 import { Poppins } from "next/font/google";
-import {NavBar} from "@/app/components/NavBar";
+import { NavBar } from "@/app/components/NavBar";
 import React from "react";
 
 const poppins = Poppins({
