@@ -21,37 +21,43 @@ export default function SocialLinks() {
         <ul ref={scope}
             className={`flex flex-row text-2xl text-[#a6a8b8] [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 hover:[&_li]:text-white focus:[&_a]:outline-none focus:[&_a]:ring-0 focus:[&_a]:text-white`}>
             <li>
-                <a target="_blank" href="https://github.com/Ceddix">
+                <a target="_blank"
+                   href="https://github.com/Ceddix">
                     <i className={`fab fa-github`}></i>
                 </a>
             </li>
 
             <li>
-                <a target="_blank" href="https://open.spotify.com/user/2fy35e57mzi84b2zhafnu7t5r?si=b11fa648285e413f">
+                <a target="_blank"
+                   href="https://open.spotify.com/user/2fy35e57mzi84b2zhafnu7t5r?si=b11fa648285e413f">
                     <i className={`fab fa-spotify`}></i>
                 </a>
             </li>
 
             <li>
-                <a target="_blank" href="https://instagram.com/cedrik.sc_">
+                <a target="_blank"
+                   href="https://instagram.com/cedrik.sc_">
                     <i className={`fab fa-instagram`}></i>
                 </a>
             </li>
 
             <li>
-                <a target="_blank" href="https://discord.gg/DXuKCRz">
+                <a target="_blank"
+                   href="https://discord.com/users/463620307245072384">
                     <i className={`fab fa-discord`}></i>
                 </a>
             </li>
 
             <li>
-                <a target="_blank" href="https://mastodon.social/@cedrik_sc" rel="me">
+                <a target="_blank"
+                   href="https://mastodon.social/@cedrik_sc" rel="me">
                     <i className={`fa-brands fa-mastodon`}></i>
                 </a>
             </li>
 
             <li>
-                <a target="_blank" href="https://twitter.com/CeddixCed">
+                <a target="_blank"
+                   href="https://twitter.com/cedrik_sc">
                     <i className={`fab fa-twitter`}></i>
                 </a>
             </li>
