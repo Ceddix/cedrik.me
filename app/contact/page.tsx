@@ -8,6 +8,10 @@ const poppins = Poppins({
     variable: "--font-poppins"
 })
 
+export const metadata = {
+    title: 'Contact',
+}
+
 export default function About() {
   return (
 
@@ -19,6 +23,8 @@ export default function About() {
           <PageWrapper>
 
               Contact
+              <br/>
+              <a href="/">Back</a>
 
           </PageWrapper>
 
