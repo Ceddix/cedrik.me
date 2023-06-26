@@ -12,7 +12,7 @@ export default function SocialLinks() {
         animate("li", {
             opacity: [0, 1], y: [5, 0]
         }, {
-            delay: stagger(0.2, { startDelay: 6 })
+            delay: stagger(0.2, { startDelay: 7 })
         })
 
     })
