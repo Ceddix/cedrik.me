@@ -1,6 +1,7 @@
 import React from "react";
 import { Poppins } from "next/font/google";
-import { PageWrapper } from "@/app/components/PageWrapper";
+import PageWrapper from "@/app/components/PageWrapper";
+import Link from "next/link";
 
 const poppins = Poppins({
     subsets: ["latin"],
@@ -24,7 +25,7 @@ export default function About() {
 
               Contact
               <br/>
-              <a href="/">Back</a>
+              <Link href="/">Back</Link>
 
           </PageWrapper>
 
