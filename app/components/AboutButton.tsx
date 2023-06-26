@@ -11,7 +11,7 @@ export default function AboutButton() {
     useEffect(() => {
 
         animate("a", {
-            opacity: [0, 1], y: [.5, 0]
+            opacity: [0, 1], y: [.5, 0], pointerEvents: ["none", "auto"]
         }, {
             delay: 6.5
         })
