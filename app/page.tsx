@@ -3,7 +3,7 @@ import Image from "next/image";
 import TypeWriter from '@/app/components/TypeWriter';
 import SocialLinks from "@/app/components/SocialLinks";
 import { Poppins } from "next/font/google";
-import { PageWrapper } from "@/app/components/PageWrapper";
+import PageWrapper from "@/app/components/PageWrapper";
 import { age } from "@/app/components/Constants"
 import AboutButton from "@/app/components/AboutButton";
 
