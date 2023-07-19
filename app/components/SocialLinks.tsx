@@ -15,7 +15,7 @@ export default function SocialLinks() {
         animate("li", {
             opacity: [0, 1], y: [5, 0], pointerEvents: ["none", "auto"]
         }, {
-            delay: stagger(0.2, { startDelay: 7 })
+            delay: stagger(0.2, { startDelay: 8 })
         })
 
     })

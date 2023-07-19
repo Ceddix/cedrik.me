@@ -1,7 +1,8 @@
 "use client";
 
 import React, {useEffect} from 'react';
-import {stagger, useAnimate} from 'framer-motion';
+
+import {useAnimate} from 'framer-motion';
 import Link from "next/link";
 
 export default function AboutButton() {
@@ -11,9 +12,9 @@ export default function AboutButton() {
     useEffect(() => {
 
         animate("a", {
-            opacity: [0, 1], y: [.5, 0], pointerEvents: ["none", "auto"]
+            opacity: [0, 1], y: [1, 0], pointerEvents: ["none", "auto"]
         }, {
-            delay: 6.5
+            delay: 7.5
         })
 
     })
