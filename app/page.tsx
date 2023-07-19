@@ -48,12 +48,12 @@ export default function Home() {
                         text={`Hi, I'm Cedrik! I'm a ${age.toString()} y/o student from Belgium!`}
                         typeSpeed={80}
                         startDelay={500}
-                        className={`text-[18px] text-[#94a1b2]`}
+                        className={`text-[18px] text-gray-400`}
                     />
 
-                    <AboutButton/>
-
                     <SocialLinks/>
+
+                    <AboutButton/>
 
                 </main>
 

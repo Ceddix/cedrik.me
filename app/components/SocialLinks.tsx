@@ -16,14 +16,14 @@ export default function SocialLinks() {
         animate("li", {
             opacity: [0, 1], y: [5, 0], pointerEvents: ["none", "auto"]
         }, {
-            delay: stagger(0.2, { startDelay: 8 })
+            delay: stagger(0.2, { startDelay: 6.5 })
         })
 
     })
 
     return (
         <ul ref={scope}
-            className={`flex flex-row text-2xl text-[#a6a8b8] [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 [&_li]:drop-shadow-md hover:[&_li]:text-white focus:[&_a]:outline-none focus:[&_a]:ring-0 focus:[&_a]:text-white`}>
+            className={`flex flex-row text-2xl text-gray-400 [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 [&_li]:drop-shadow-md hover:[&_li]:text-white focus:[&_a]:outline-none focus:[&_a]:ring-0 focus:[&_a]:text-white`}>
             <li>
                 <a target="_blank"
                    href="https://github.com/Ceddix">
