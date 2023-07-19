@@ -4,7 +4,6 @@ import React from 'react';
 
 import { useLanyardWS } from "use-lanyard";
 import { discordId } from "@/app/components/Constants";
-import { motion } from 'framer-motion';
 import clsx from "clsx";
 
 export default function DiscordStatus() {
@@ -22,6 +21,7 @@ export default function DiscordStatus() {
                 ['bg-red-500']: status === "dnd",
                 ['bg-zinc-800 opacity-0']: status === "offline" || status === "loading",
             },
-        )}/>
+        )}
+        />
     )
 }
