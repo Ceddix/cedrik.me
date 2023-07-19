@@ -3,6 +3,9 @@
 import React, { useEffect } from 'react';
 import { useAnimate, stagger } from 'framer-motion';
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faSpotify, faInstagram, faDiscord, faMastodon, faTwitter } from "@fortawesome/free-brands-svg-icons";
+
 export default function SocialLinks() {
 
     const [scope, animate] = useAnimate()
@@ -23,42 +26,42 @@ export default function SocialLinks() {
             <li>
                 <a target="_blank"
                    href="https://github.com/Ceddix">
-                    <i className={`fab fa-github`}></i>
+                    <FontAwesomeIcon icon={faGithub} />
                 </a>
             </li>
 
             <li>
                 <a target="_blank"
                    href="https://open.spotify.com/user/2fy35e57mzi84b2zhafnu7t5r?si=b11fa648285e413f">
-                    <i className={`fab fa-spotify`}></i>
+                    <FontAwesomeIcon icon={faSpotify} />
                 </a>
             </li>
 
             <li>
                 <a target="_blank"
                    href="https://instagram.com/cedrik.sc_">
-                    <i className={`fab fa-instagram`}></i>
+                    <FontAwesomeIcon icon={faInstagram} />
                 </a>
             </li>
 
             <li>
                 <a target="_blank"
                    href="https://discord.com/users/463620307245072384">
-                    <i className={`fab fa-discord`}></i>
+                    <FontAwesomeIcon icon={faDiscord} />
                 </a>
             </li>
 
             <li>
                 <a target="_blank"
                    href="https://mastodon.social/@cedrik_sc" rel="me">
-                    <i className={`fa-brands fa-mastodon`}></i>
+                    <FontAwesomeIcon icon={faMastodon} />
                 </a>
             </li>
 
             <li>
                 <a target="_blank"
                    href="https://twitter.com/cedrik_sc">
-                    <i className={`fab fa-twitter`}></i>
+                    <FontAwesomeIcon icon={faTwitter} />
                 </a>
             </li>
         </ul>

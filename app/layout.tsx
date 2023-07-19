@@ -1,7 +1,12 @@
+import React from "react";
+
 import './globals.css'
 import Image from "next/image";
 import { Poppins } from "next/font/google";
-import React from "react";
+
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
 
 const poppins = Poppins({
     subsets: ["latin"],
