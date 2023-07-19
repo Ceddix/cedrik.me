@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { usePathname } from "next/navigation";
 
 const links = [
+    {href: "/", label: "/"},
     {href: "/about", label: "About"},
     {href: "/blog", label: "Blog"},
     {href: "/contact", label: "Contact"}
@@ -20,20 +21,6 @@ export const NavBar = () => {
         <nav className={"flex flex-col items-center z-10 w-100"}>
             <div className={"block fixed top-4"}>
                 <ul className={"flex flex-row w-auto py-1 px-3 rounded-xl bg-neutral-900/[.8] backdrop-blur-lg backdrop-saturate-150 shadow-md border border-white/[.125]"}>
-                    <div className={"m-1 h-5 w-5 rounded-full"}>
-                        <Link
-                            href={"/"}
-                        >
-                            <Image
-                                src={`/profile.png`}
-                                alt={`profile`}
-                                className={`inline-block object-cover rounded-full`}
-                                quality={100}
-                                width={100}
-                                height={100}
-                            />
-                        </Link>
-                    </div>
                     {links.map((link) => (
                         <li key={link.href} className={"m-1"}>
                             <Link
