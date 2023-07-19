@@ -2,12 +2,12 @@ import React from "react";
 
 import './globals.css'
 import Image from "next/image";
-import { Poppins } from "next/font/google";
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 config.autoAddCss = false;
 
+import { Poppins } from "next/font/google";
 const poppins = Poppins({
     subsets: ["latin"],
     weight: "400",

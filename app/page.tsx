@@ -1,12 +1,13 @@
 import React from "react";
+
 import Image from "next/image";
 import TypeWriter from '@/app/components/TypeWriter';
 import SocialLinks from "@/app/components/SocialLinks";
-import { Poppins } from "next/font/google";
 import PageWrapper from "@/app/components/PageWrapper";
 import { age } from "@/app/components/Constants"
 import AboutButton from "@/app/components/AboutButton";
 
+import {Poppins} from "next/font/google";
 const poppins = Poppins({
     subsets: ["latin"],
     weight: "400",

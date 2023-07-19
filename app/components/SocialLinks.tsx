@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from 'react';
+
 import { useAnimate, stagger } from 'framer-motion';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,10 +1,10 @@
 "use client";
 
 import React from 'react';
+
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import {usePathname} from "next/navigation";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 const links = [
     {href: "/about", label: "About"},
