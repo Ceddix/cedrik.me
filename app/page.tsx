@@ -16,7 +16,6 @@ const poppins = Poppins({
 })
 
 export default function Home() {
-
     return (
 
         // Navbar (delay with text)
@@ -29,6 +28,7 @@ export default function Home() {
                 <main className={"flex flex-col justify-center items-center text-center min-h-[70vh]"}>
 
                     <div className="relative mb-2.5 cursor-pointer transition transform duration-500 hover:scale-105">
+
                         <Image
                             src={`/profile.png`}
                             alt={`profile`}

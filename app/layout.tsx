@@ -31,26 +31,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
     <body className={`${poppins.variable} font-sans`}>
 
-    <div className={`h-screen`}>
+        <div className={`h-screen`}>
 
-        <Image
-            src={`/profile.png`}
-            alt={`background`}
-            className={`object-cover object-center`}
-            fill={true}
-            quality={100}
-        />
+            <Image
+                src={`/profile.png`}
+                alt={`background`}
+                quality={100}
+                fill
+                sizes="100vw"
+                className={`object-cover`}
+            />
 
-        <div className={`h-screen backdrop-blur-2xl bg-[#16161A]/80 shadow-inner`} style={{ boxShadow: "inset 0 0 20px 1px #141417" }}>
+            <div className={`h-screen backdrop-blur-2xl bg-[#16161A]/80`}
+                 style={{boxShadow: "inset 0 0 20px 1px #141417"}}>
 
-           {children}
+                {children}
 
         </div>
 
+        </div>
 
-    </div>
-
-    </body>
-    </html>
-  )
+        </body>
+        </html>
+    )
 }

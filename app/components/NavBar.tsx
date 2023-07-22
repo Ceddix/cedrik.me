@@ -18,20 +18,19 @@ export const NavBar = () => {
     const path = usePathname();
 
     return (
-        <nav className={"flex flex-col items-center z-10 w-100"}>
+        <nav className={"flex flex-col relative items-center z-50 w-100"}>
             <div className={"block fixed top-4"}>
                 <ul className={"flex flex-row w-auto py-1 px-3 rounded-xl bg-neutral-900/[.8] backdrop-blur-lg backdrop-saturate-150 shadow-md border border-white/[.125]"}>
                     {links.map((link) => (
                         <li key={link.href} className={"m-1"}>
                             <Link
-                                  className={"group relative text-sm text-neutral-200 hover:text-[#8a8483] focus:outline-none focus:ring-0"}
+                                  className={"group relative text-sm text-neutral-200 hover:text-[#576490] focus:outline-none focus:ring-0"}
                                   href={link.href}
-                                /*className={"inline-block rounded-2xl py-2 px-3 bg-gray-700 bg-opacity-50 text-gray-200 shadow-md transition transform duration-250 hover:bg-opacity-100 hover:scale-105"}*/
                             >
                                 {link.href === path && (
                                     <motion.span
                                         layoutId={"underline"}
-                                        className={"absolute top-full block h-[.8px] w-[96%] left-[2%] bg-neutral-200 group-hover:bg-[#8a8483]"}
+                                        className={"absolute top-full block h-[1px] w-[94%] left-[3%] bg-neutral-200 group-hover:bg-[#576490]"}
                                     />
                                 )}
                                 {link.label}

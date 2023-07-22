@@ -5,13 +5,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
       <>
 
-          <div className={"flex flex-col h-screen overflow-y-auto items-left"}>
+          <NavBar/>
 
-              <NavBar/>
+          <div className={"flex relative items-stretch flex-grow overflow-y-auto"}>
 
-              <main className={"flex-1 p-5 pt-20 pb-36 max-w-3xl"}>
+              <main className={"flex flex-col relative max-w-3xl mx-auto w-full h-screen"}>
 
-                  <div className={"relative w-full overflow-y-hidden text-justify"}>
+                  <div className={"block flex-grow text-justify p-5 pt-20 pb-36"}>
 
                       {children}
 
