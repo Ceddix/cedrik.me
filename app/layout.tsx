@@ -2,6 +2,7 @@ import React from "react";
 
 import "@/app/globals.css";
 import Image from "next/image";
+import DiscordActivities from "@/app/components/DiscordActivities";
 
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
@@ -50,6 +51,7 @@ export default function RootLayout({
           >
             {children}
 
+            <DiscordActivities />
           </div>
         </div>
       </body>
