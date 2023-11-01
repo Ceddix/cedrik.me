@@ -4,6 +4,7 @@ import PageWrapper from "@/app/components/PageWrapper";
 import { age } from "@/app/components/Constants";
 
 import { Poppins } from "next/font/google";
+import Image from "next/image";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: "400",
@@ -21,11 +22,10 @@ export default function About() {
 
     <>
       <PageWrapper>
-        Hey there! I'm Cedrik, a {age} years old tech-loving student from
-        Belgium, living near the borders of Germany and the Netherlands. I just
-        finished my Abitur and I'm looking forward to start my International
-        Business studies at Maastricht University this September. But hey,
-        that's not all I'm about!
+
+        Hey there! I'm Cedrik, a {age} years old student from
+        Belgium, living near the borders of Germany and the Netherlands.
+        I study International Business at Maastricht University.
         <br />
         <br />
         Since I was a kid, I've been drawn to technology like a magnet. I'd
@@ -46,7 +46,7 @@ export default function About() {
         and boy, it's been an amazing journey.
         <br />
         <br />
-        (image ct)
+        <Image src={"/about/screenshot-2.jpg"} alt={"Screenshot CraftTogetherMC"} width={500} height={100}/>
         <br />
         <br />
         At CraftTogetherMC, we've built some pretty cool stuff together. One of
