@@ -58,7 +58,7 @@ export default function SocialLinks() {
             <li>
                 <a target="_blank"
                    href="https://twitter.com/cedrik_sc">
-                    <i class={`fa-brands fa-x-twitter`}></i>
+                    <i className={`fa-brands fa-x-twitter`}></i>
                 </a>
             </li>
         </ul>
