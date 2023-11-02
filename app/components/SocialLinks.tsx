@@ -11,7 +11,7 @@ import {
   faInstagram,
   faDiscord,
   faMastodon,
-  faTwitter,
+  faXTwitter,
 } from "@fortawesome/free-brands-svg-icons";
 
 export default function SocialLinks() {
@@ -71,7 +71,7 @@ export default function SocialLinks() {
 
       <li>
         <a target="_blank" href="https://twitter.com/cedrik_sc">
-          <FontAwesomeIcon icon={faTwitter} />
+          <FontAwesomeIcon icon={faXTwitter} />
         </a>
       </li>
     </ul>
