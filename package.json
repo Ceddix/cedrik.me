@@ -1,5 +1,5 @@
 {
-  "name": "ceddix.de",
+  "name": "cedrik.me",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,25 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.3.0",
-    "@fortawesome/free-regular-svg-icons": "^6.3.0",
-    "@fortawesome/free-solid-svg-icons": "^6.3.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-brands-svg-icons": "^6.4.0",
+    "@fortawesome/free-regular-svg-icons": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/node": "18.14.6",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "ahooks": "^3.7.7",
+    "clsx": "^2.0.0",
     "eslint-config-next": "^13.4.7",
     "framer-motion": "^10.12.2",
     "next": "^13.4.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typed.js": "^2.0.132",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "use-lanyard": "^1.4.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.4.1",
     "tailwindcss": "^3.3.2"
   }
 }

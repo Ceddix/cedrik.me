@@ -9,7 +9,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
               <NavBar/>
 
-              <main className={"flex-1 p-5 py-20 max-w-4xl w-full"}>
+              <main className={"flex-1 p-5 py-20 max-w-3xl w-full"}>
 
                   <div className={"relative overflow-y-hidden"}>
 
