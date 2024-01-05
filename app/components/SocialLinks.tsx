@@ -50,7 +50,7 @@ export default function SocialLinks() {
       </li>
 
       <li>
-        <a target="_blank" href="https://threads.com/cedrik.sc_">
+        <a target="_blank" href="https://threads.net/@cedrik.sc_">
           <TbBrandThreads size={32}/>
         </a>
       </li>
