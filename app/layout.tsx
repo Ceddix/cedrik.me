@@ -2,6 +2,7 @@ import React from "react";
 
 import "@/app/globals.css";
 import Image from "next/image";
+import { Analytics } from '@vercel/analytics/react';
 import DiscordActivities from "@/app/components/DiscordActivities";
 
 import { Poppins } from "next/font/google";
@@ -43,11 +44,12 @@ export default function RootLayout({
 
           <div
             className={`h-screen bg-[#16161A]/80 backdrop-blur-2xl`}
-            style={{ boxShadow: "inset 0 0 20px 1px #141417" }}
-          >
-            {children}
+            style={{ boxShadow: "inset 0 0 20px 1px #141417" }}>
 
+            {children}
+            <Analytics />
             <DiscordActivities />
+
           </div>
         </div>
       </body>
