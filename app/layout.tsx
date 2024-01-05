@@ -33,6 +33,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} font-sans`}>
         <div className={`h-screen`}>
+
           <Image
             src={`/profile.png`}
             alt={`background`}
@@ -48,9 +49,10 @@ export default function RootLayout({
 
             {children}
             <Analytics />
-            <DiscordActivities />
+            {/*<DiscordActivities />*/}
 
           </div>
+
         </div>
       </body>
     </html>

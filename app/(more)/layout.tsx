@@ -1,21 +1,24 @@
-import { NavBar } from "@/app/components/NavBar";
 import React from "react";
+
+import { NavBar } from "@/app/components/NavBar";
+import PageWrapper from "@/app/components/PageWrapper";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 
   return (
       <>
 
-          <div className={"flex flex-col h-screen overflow-y-auto items-center"}>
+          <div className={`flex flex-col h-screen overflow-y-auto items-center`}>
 
-              <NavBar/>
+              {/*<NavBar/>*/}
 
-              <main className={"flex-1 p-5 py-20 max-w-3xl w-full"}>
+              <main className={`p-5 py-20`}>
 
-                  <div className={"relative overflow-y-hidden"}>
+                  <PageWrapper>
 
                       {children}
 
-                  </div>
+                  </PageWrapper>
 
               </main>
 
