@@ -4,10 +4,6 @@ import "@/app/globals.css";
 import Image from "next/image";
 import DiscordActivities from "@/app/components/DiscordActivities";
 
-import "@fortawesome/fontawesome-svg-core/styles.css";
-import { config } from "@fortawesome/fontawesome-svg-core";
-config.autoAddCss = false;
-
 import { Poppins } from "next/font/google";
 const poppins = Poppins({
   subsets: ["latin"],

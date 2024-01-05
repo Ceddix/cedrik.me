@@ -4,15 +4,7 @@ import React, { useEffect } from "react";
 
 import { useAnimate, stagger } from "framer-motion";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faGithub,
-  faSpotify,
-  faInstagram,
-  faDiscord,
-  faMastodon,
-  faXTwitter,
-} from "@fortawesome/free-brands-svg-icons";
+import { TbBrandGithub, TbBrandSpotify, TbBrandInstagram, TbBrandThreads, TbBrandDiscord } from 'react-icons/tb';
 
 export default function SocialLinks() {
   const [scope, animate] = useAnimate();
@@ -38,7 +30,7 @@ export default function SocialLinks() {
     >
       <li>
         <a target="_blank" href="https://github.com/Ceddix">
-          <FontAwesomeIcon icon={faGithub} />
+          <TbBrandGithub size={32}/>
         </a>
       </li>
 
@@ -47,19 +39,19 @@ export default function SocialLinks() {
           target="_blank"
           href="https://open.spotify.com/user/2fy35e57mzi84b2zhafnu7t5r?si=b11fa648285e413f"
         >
-          <FontAwesomeIcon icon={faSpotify} />
+          <TbBrandSpotify size={32}/>
         </a>
       </li>
 
       <li>
         <a target="_blank" href="https://instagram.com/cedrik.sc_">
-          <FontAwesomeIcon icon={faInstagram} />
+          <TbBrandInstagram size={32}/>
         </a>
       </li>
 
       <li>
         <a target="_blank" href="https://discord.com/users/463620307245072384">
-          <FontAwesomeIcon icon={faDiscord} />
+          <TbBrandDiscord size={32}/>
         </a>
       </li>
 
