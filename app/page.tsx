@@ -35,7 +35,7 @@ export default function Home() {
             <DiscordStatus />
           </div>
 
-          <h1 className={`pb-1 text-3xl font-bold`}>Cedrik Secic</h1>
+          <h1 className={`pb-1 text-3xl font-bold`}>Cedrik Secic <span className={`text-2xl text-gray-300`}>(he/him)</span></h1>
 
           <div className={`text-[1.2rem] text-gray-300`}>
             <span className={`font-bold`}>hi, i'm cedrik, </span>
