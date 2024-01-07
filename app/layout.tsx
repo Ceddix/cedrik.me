@@ -3,7 +3,7 @@ import React from "react";
 import "@/app/globals.css";
 import Image from "next/image";
 import { Analytics } from '@vercel/analytics/react';
-import DiscordActivities from "@/app/components/DiscordActivities";
+import DiscordActivities from "@/app/components/ui/DiscordActivities";
 
 import { Poppins } from "next/font/google";
 const poppins = Poppins({

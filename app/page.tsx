@@ -2,9 +2,10 @@ import React from "react";
 
 import Image from "next/image";
 import Link from "next/link";
-import SocialLinks from "@/app/components/SocialLinks";
 import PageWrapper from "@/app/components/PageWrapper";
-import DiscordStatus from "@/app/components/DiscordStatus";
+
+import SocialLinks from "@/app/components/ui/SocialLinks";
+import DiscordStatus from "@/app/components/ui/DiscordStatus";
 import { age } from "@/app/components/Constants";
 import { TbArrowNarrowRight } from "react-icons/tb";
 

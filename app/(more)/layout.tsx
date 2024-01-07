@@ -1,6 +1,6 @@
 import React from "react";
 
-import { NavBar } from "@/app/components/NavBar";
+import { NavBar } from "@/app/components/ui/NavBar";
 import PageWrapper from "@/app/components/PageWrapper";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
