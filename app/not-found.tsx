@@ -3,6 +3,10 @@ import {TbArrowNarrowLeft} from "react-icons/tb";
 import React from "react";
 import PageWrapper from "@/app/components/PageWrapper";
 
+export const metadata = {
+    title: "404",
+};
+
 export default function NotFound() {
     return (
         <>
