@@ -13,7 +13,7 @@ export default function NotFound() {
             <div className={`flex flex-col h-screen overflow-y-auto items-center`}>
                 <main className={`p-5 py-20`}>
                     <PageWrapper>
-                        <div className={`prose prose-invert w-screen`}>
+                        <div className={`prose prose-invert`}>
 
                             <h1 className={`leading-3 mb-0`}>Error: 404</h1>
                             <p>It appears that the page you're looking for couldn't be found...</p>
@@ -24,7 +24,6 @@ export default function NotFound() {
                                     back to home
                                 </Link>
                             </div>
-
 
                         </div>
                     </PageWrapper>
