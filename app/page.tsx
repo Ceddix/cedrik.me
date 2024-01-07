@@ -8,13 +8,6 @@ import DiscordStatus from "@/app/components/DiscordStatus";
 import { age } from "@/app/components/Constants";
 import { TbArrowNarrowRight } from "react-icons/tb";
 
-import { Poppins } from "next/font/google";
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-poppins",
-});
-
 export default function Home() {
   return (
     // Activity
