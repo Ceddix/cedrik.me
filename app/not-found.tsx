@@ -1,7 +1,10 @@
-import Link from 'next/link';
-import {TbArrowNarrowLeft} from "react-icons/tb";
 import React from "react";
+
+import Link from 'next/link';
+import { TbArrowNarrowLeft } from "react-icons/tb";
 import PageWrapper from "@/app/components/PageWrapper";
+import GetPathname from "@/app/components/GetPathname";
+
 
 export const metadata = {
     title: "404",
@@ -15,8 +18,8 @@ export default function NotFound() {
                     <PageWrapper>
                         <div className={`prose prose-invert`}>
 
-                            <h1 className={`leading-3 mb-0`}>Error: 404</h1>
-                            <p>It appears that the page you're looking for couldn't be found...</p>
+                            <h1 className={`mb-0`}>404</h1>
+                            <p className={`mt-2`}>The page you are looking for (<code><GetPathname/></code>) could not be found... Perhaps you have mistyped, or the URL you entered no longer exists.</p>
 
                             <div className={`pb-4 text-lg`}>
                                 <Link href="/" className={`no-underline`}>
