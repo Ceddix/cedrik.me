@@ -6,7 +6,8 @@ import { age } from "@/app/components/Constants";
 import fs from 'fs'
 import path from 'path'
 import { MDXRemote } from 'next-mdx-remote/rsc'
-import {TbArrowNarrowLeft} from "react-icons/tb";
+import { TbArrowNarrowLeft } from "react-icons/tb";
+import CustomLink from "@/app/components/ui/CustomLink";
 
 export const metadata = {
   title: "About",
@@ -29,9 +30,9 @@ export default function About() {
               </a>
           </div>
 
-          {/* @ts-expect-error Async Server Component */}
-          <MDXRemote source={markdownFile} components={{Image}}/>
-      </div>
-    </>
-  );
+                {/* @ts-expect-error Async Server Component */}
+                <MDXRemote source={markdownFile} components={{Image, a: CustomLink}}/>
+            </div>
+        </>
+    );
 }

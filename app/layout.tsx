@@ -49,6 +49,7 @@ export default function RootLayout({
 
             {children}
             <Analytics />
+            {/* Discord Activities: WIP (see discord-activities branch) */}
             {/*<DiscordActivities />*/}
 
           </div>
