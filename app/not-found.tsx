@@ -18,8 +18,9 @@ export default function NotFound() {
                     <PageWrapper>
                         <div className={`prose prose-invert`}>
 
-                            <h1 className={`mb-0`}>404</h1>
-                            <p className={`mt-2`}>The page you are looking for (<code><GetPathname/></code>) could not be found... Perhaps you have mistyped, or the URL you entered no longer exists.</p>
+                            <h1 className={`mb-0`}>404 — Not Found</h1>
+                            <p className={`mt-2 text-lg`}>The page you are looking for (<code><GetPathname/></code>) could not be found.
+                                <br/>Perhaps you have mistyped, or the URL you entered no longer exists.</p>
 
                             <div className={`pb-4 text-lg`}>
                                 <Link href="/" className={`no-underline`}>
