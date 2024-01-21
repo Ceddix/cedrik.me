@@ -8,6 +8,7 @@ import path from 'path'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { TbArrowNarrowLeft } from "react-icons/tb";
 import CustomLink from "@/app/components/ui/CustomLink";
+import ContactForm from "@/app/components/ui/ContactForm";
 
 export const metadata = {
   title: "About",
@@ -31,7 +32,7 @@ export default function About() {
           </div>
 
                 {/* @ts-expect-error Async Server Component */}
-                <MDXRemote source={markdownFile} components={{Image, a: CustomLink}}/>
+                <MDXRemote source={markdownFile} components={{Image, ContactForm, a: CustomLink}}/>
             </div>
         </>
     );
