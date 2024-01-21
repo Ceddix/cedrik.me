@@ -46,7 +46,7 @@ export default function ContactForm() {
 
     if (submitted) {
         return (
-            <div>
+            <div className={`rounded border-2 border-gray-300/[0.3] bg-neutral-700/[.4] py-2 text-md leading-normal shadow-lg`}>
                 Submitted
             </div>
         );
@@ -76,7 +76,7 @@ export default function ContactForm() {
                     ></textarea>
                 </div>
 
-                {error && <div className={`text-red-600`}>{error}</div>}
+                {error && <div className={`text-rose-500`}>{error}</div>}
 
                 <div>
                     <input
