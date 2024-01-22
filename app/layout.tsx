@@ -13,6 +13,7 @@ const poppins = Poppins({
 });
 
 export const metadata = {
+  metadataBase: new URL('https://cedrik.me'),
   title: {
     default: "Cedrik Secic",
     template: "%s | Cedrik Secic",
@@ -25,7 +26,7 @@ export const metadata = {
   openGraph: {
     images: [
       {
-        url: "https://cedrik.me/profile.png"
+        url: "/profile.png"
       }
     ]
   }

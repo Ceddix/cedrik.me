@@ -19,8 +19,18 @@ Oh, and here's a bit more about me. I started learning programming a few years a
 ...
 
 ## Contact
-I'd love to connect with fellow tech enthusiasts, Minecraft fans, or just anyone who wants to say hi! Feel free to drop me a message here:
+If you've read this far (thank you!) then you already know a lot about me! I'd love to connect with fellow tech enthusiasts, Minecraft fans, or just anyone who wants to say hi! Feel free to drop me a message here:
 
-<ContactForm/>
+<div className={`flex flex-row`}>
 
-You can also find me at [ceddix](https://github.com/ceddix) on GitHub, [@cedrik_sc](https://twitter.com/cedrik_sc) on X, [@ceddix](https://discord.com/users/463620307245072384) on Discord or [@cedrik.sc_](https://www.instagram.com/cedrik.sc_) on the Instagram/Threads.
+    <ContactForm/>
+
+    <div className={`w-1/3 pl-4 flex flex-col space-y-4`}>
+        <ContactLink name={"@ceddix"} icon={<TbBrandDiscord className={`text-3xl`}/>} link={"/discord"}/>
+        <ContactLink name={"@cedrik.sc_"} icon={<TbBrandInstagram className={`text-3xl`}/>} link={"/instagram"}/>
+        <ContactLink name={"contact@cedrik.me"} icon={<TbMail className={`text-3xl`}/>} link={"mailto:contact@cedrik.me"}/>
+    </div>
+
+</div>
+
+Thank you for reading this far \<3 If you would like to support me and my projects, you are welcome to leave me a [donation](https://paypal.me/cedriksc) at any time.
