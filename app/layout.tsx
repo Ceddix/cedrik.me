@@ -17,11 +17,18 @@ export const metadata = {
     default: "Cedrik Secic",
     template: "%s | Cedrik Secic",
   },
-  description: "Cedrik's Personal Website",
+  description: "My personal website.",
   authors: [{ name: "Cedrik Secic" }],
   icons: {
     icon: "/favicon.ico",
   },
+  openGraph: {
+    images: [
+      {
+        url: "https://cedrik.me/profile.png"
+      }
+    ]
+  }
 };
 
 export default function RootLayout({
