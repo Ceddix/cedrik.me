@@ -19,5 +19,5 @@ body {
 
 /* Cursor */
 .typed-cursor {
-  color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, .75);
 }
