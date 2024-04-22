@@ -32,6 +32,11 @@ module.exports = {
                 destination: 'https://www.linkedin.com/in/cedrik-secic/',
                 permanent: true,
             },
+            {
+                source: '/donate',
+                destination: 'https://paypal.me/cedriksc',
+                permanent: true,
+            },
         ]
     },
 }
