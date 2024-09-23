@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 import { useAnimate, stagger } from "framer-motion";
 
-import { TbBrandGithub, TbBrandSpotify, TbBrandInstagram, TbBrandThreads, TbBrandDiscord } from 'react-icons/tb';
+import { TbBrandGithub, TbBrandSpotify, TbBrandInstagram, TbBrandThreads, TbBrandDiscord, TbBrandLinkedin } from 'react-icons/tb';
 
 export default function SocialLinks() {
   const [scope, animate] = useAnimate();
@@ -58,6 +58,12 @@ export default function SocialLinks() {
       <li>
         <a target="_blank" href="https://discord.com/users/463620307245072384">
           <TbBrandDiscord size={32}/>
+        </a>
+      </li>
+
+      <li>
+        <a target="_blank" href="https://www.linkedin.com/in/cedrik-secic/">
+          <TbBrandLinkedin size={32}/>
         </a>
       </li>
 
