@@ -36,7 +36,7 @@ export default function Home() {
 
                     <div className={`text-[1.2rem] text-gray-300`}>
                         <span className={`font-bold`}>hi, i'm cedrik, </span>
-                        an {age.toString()} y/o student from belgium
+                        a {age.toString()} y/o student from belgium
                     </div>
 
                     <div className={"w-full max-w-[31.15rem] px-9"}>
