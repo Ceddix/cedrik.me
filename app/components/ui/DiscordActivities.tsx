@@ -24,7 +24,7 @@ export default function DiscordActivities() {
                 activities?.slice(0, 1).map((activity) => (
                   <li
                     className={
-                      "flex flex-row items-center gap-3 rounded-full border border-white/[.125] bg-neutral-800/[.8] p-2 shadow-md backdrop-blur-lg backdrop-saturate-150"
+                      "flex flex-row items-center gap-3 rounded-full border border-white/12.5 bg-neutral-800/80 p-2 shadow-md backdrop-blur-lg backdrop-saturate-150"
                     }
                   >
                     {(activity.name === "Spotify" && (
@@ -34,7 +34,7 @@ export default function DiscordActivities() {
                             src={`${spotify?.album_art_url}`}
                             alt="Spotify Album Art"
                             className={
-                              "h-14 rounded-full border border-white/[.125] shadow-md"
+                              "h-14 rounded-full border border-white/12.5 shadow-md"
                             }
                           />
                         </div>
@@ -57,7 +57,7 @@ export default function DiscordActivities() {
                                 src={`https://cdn.discordapp.com/app-assets/${activity.application_id}/${activity.assets?.large_image}.png`}
                                 alt="Activity Image"
                                 className={
-                                  "h-14 rounded-full border border-white/[.1] shadow-md"
+                                  "h-14 rounded-full border border-white/10 shadow-md"
                                 }
                               />
                             </div>

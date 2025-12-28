@@ -47,7 +47,7 @@ export default function ContactForm() {
     if (submitted) {
         return (
             <div
-                className={`rounded border-2 border-gray-300/[0.3] bg-neutral-700/[.4] py-2 text-md leading-normal shadow-lg`}>
+                className={`rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal shadow-lg`}>
                 Submitted
             </div>
         );
@@ -55,7 +55,7 @@ export default function ContactForm() {
 
     return (
         <form onSubmit={submit}
-              className={`rounded border-2 border-gray-300/[0.3] bg-neutral-700/[.4] p-4 text-md leading-normal shadow-lg space-y-4 w-2/3`}>
+              className={`rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 p-4 text-md leading-normal shadow-lg space-y-4 w-2/3`}>
             <div>
                 <label className={`block mb-1 text-sm font-medium text-white`}>
                     Your email
@@ -64,7 +64,7 @@ export default function ContactForm() {
                     ref={email}
                     type="email"
                     placeholder={"hi@cedrik.me"}
-                    className={`block w-full p-2.5 text-sm text-white bg-neutral-600/[0.4] rounded-lg hover:bg-neutral-400/[.2] focus:bg-neutral-400/[.2] focus:outline-none focus:ring-2 focus:ring-gray-300/[0.3]`}
+                    className={`block w-full p-2.5 text-sm text-white bg-neutral-600/40 rounded-lg hover:bg-neutral-400/20 focus:bg-neutral-400/20 focus:outline-hidden focus:ring-2 focus:ring-gray-300/30`}
                 />
             </div>
 
@@ -75,7 +75,7 @@ export default function ContactForm() {
                 <textarea
                     ref={message}
                     // placeholder={"Your Message"}
-                    className={`block w-full p-2.5 min-h-24 text-sm text-white bg-neutral-600/[0.4] rounded-lg hover:bg-neutral-400/[.2] focus:bg-neutral-400/[.2] focus:outline-none focus:ring-2 focus:ring-gray-300/[0.3]`}
+                    className={`block w-full p-2.5 min-h-24 text-sm text-white bg-neutral-600/40 rounded-lg hover:bg-neutral-400/20 focus:bg-neutral-400/20 focus:outline-hidden focus:ring-2 focus:ring-gray-300/30`}
                 />
             </div>
 
@@ -87,7 +87,7 @@ export default function ContactForm() {
                     value={"Send"}
                     className={`
                         ${loading ? "opacity-50 pointer-events-none" : ""} 
-                        w-full px-5 py-2.5 text-sm text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-2 focus:outline-none focus:ring-cyan-300/[0.6] font-medium rounded-lg text-center cursor-pointer transition duration-200 ease-in-out overflow-auto
+                        w-full px-5 py-2.5 text-sm text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-2 focus:outline-hidden focus:ring-cyan-300/60 font-medium rounded-lg text-center cursor-pointer transition duration-200 ease-in-out overflow-auto
                         `}
                 />
             </div>

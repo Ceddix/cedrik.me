@@ -21,14 +21,14 @@ export const NavBar = () => {
       <div className={"fixed top-4 block"}>
         <ul
           className={
-            "flex w-auto flex-row rounded-xl border border-white/[.125] bg-neutral-900/[.8] px-3 py-1 shadow-md backdrop-blur-lg backdrop-saturate-150"
+            "flex w-auto flex-row rounded-xl border border-white/12.5 bg-neutral-900/80 px-3 py-1 shadow-md backdrop-blur-lg backdrop-saturate-150"
           }
         >
           {links.map((link) => (
             <li key={link.href} className={"m-1"}>
               <Link
                 className={
-                  "group relative text-sm text-neutral-200 hover:text-[#576490] focus:outline-none focus:ring-0"
+                  "group relative text-sm text-neutral-200 hover:text-[#576490] focus:outline-hidden focus:ring-0"
                 }
                 href={link.href}
               >
@@ -36,7 +36,7 @@ export const NavBar = () => {
                   <motion.span
                     layoutId={"underline"}
                     className={
-                      "absolute left-[3%] top-full block h-[1px] w-[94%] bg-neutral-200 group-hover:bg-[#576490]"
+                      "absolute left-[3%] top-full block h-px w-[94%] bg-neutral-200 group-hover:bg-[#576490]"
                     }
                   />
                 )}

@@ -26,7 +26,7 @@ export default function SocialLinks() {
   return (
     <ul
       ref={scope}
-      className={`flex flex-row text-gray-300 focus:[&_a]:text-white focus:[&_a]:outline-none focus:[&_a]:ring-0 [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 [&_li]:drop-shadow-md hover:[&_li]:text-white transition-all duration-200`}
+      className={`flex flex-row text-gray-300 [&_a]:focus:text-white [&_a]:focus:outline-hidden [&_a]:focus:ring-0 [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 [&_li]:drop-shadow-md [&_li]:hover:text-white transition-all duration-200`}
     >
       <li>
         <a target="_blank" href="https://github.com/Ceddix">
