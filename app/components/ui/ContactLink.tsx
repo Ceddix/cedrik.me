@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import Link from "next/link";
 import {TbExternalLink} from "react-icons/tb";
 
-export const ContactLink = ({name, icon, link}: {name: string; icon: ReactElement; link: string}) => {
+export const ContactLink = ({name, icon, link}: {name: string; icon: ReactElement<any>; link: string}) => {
 
     return (
             <Link

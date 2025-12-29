@@ -1,12 +1,12 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import {sql} from '@vercel/postgres';
 
 export const config = {
     matcher: ['/f(iles)?/(.*)','/s(hort)?/(.*)'],
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const path = request.nextUrl.pathname;
     const segments = path.split('/');
 
