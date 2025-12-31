@@ -1,7 +1,7 @@
 /* Tailwind */
-@import 'tailwindcss';
+@import "tailwindcss";
 
-@plugin '@tailwindcss/typography';
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-sans:
