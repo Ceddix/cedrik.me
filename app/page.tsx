@@ -21,7 +21,7 @@ export default function Home() {
                         <Image
                             src={`/profile.png`}
                             alt={`profile`}
-                            className={`rounded-full border-[8px] border-zinc-800 object-cover`}
+                            className={`rounded-full border-8 border-zinc-800 object-cover`}
                             quality={100}
                             width={170}
                             height={170}
@@ -43,7 +43,7 @@ export default function Home() {
                         <Link
                             href={"/about"}
                             className={
-                                "group my-3 inline-block w-full rounded border-2 border-gray-300/[0.3] bg-neutral-700/[.4] py-2 text-md leading-normal text-gray-200 shadow-lg transition duration-200 ease-in-out hover:bg-neutral-600/[.6] focus:bg-neutral-900/[.6] focus:outline-none focus:ring-0 active:bg-neutral-950"
+                                "group my-3 inline-block w-full rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg transition duration-200 ease-in-out hover:bg-neutral-600/60 focus:bg-neutral-900/60 focus:outline-hidden focus:ring-0 active:bg-neutral-950"
                             }
                         >
                             about me
