@@ -38,8 +38,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${poppins.variable} font-sans`}>
+    <html lang="en" className={`${poppins.variable}`}>
+      <body className={`font-sans`}>
         <div className={`h-screen`}>
 
           <Image
