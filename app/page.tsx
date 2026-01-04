@@ -47,7 +47,7 @@ export default function Home() {
                             }*/
                             href={"/"}
                             className={
-                                "opacity-60 pointer-events-none group my-3 inline-block w-full rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg"
+                                "opacity-60 pointer-events-none group my-2.5 inline-block w-full rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg"
                             }
                         >
                             about me (coming soon)
