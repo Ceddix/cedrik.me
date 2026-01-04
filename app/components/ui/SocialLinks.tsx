@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 import { useAnimate, stagger } from "framer-motion";
 
-import { TbBrandGithub, TbBrandSpotify, TbBrandInstagram, TbBrandThreads, TbBrandDiscord } from 'react-icons/tb';
+import { TbBrandGithub, TbBrandSpotify, TbBrandInstagram, TbBrandThreads, TbBrandDiscord, TbBrandLinkedin } from 'react-icons/tb';
 
 export default function SocialLinks() {
   const [scope, animate] = useAnimate();
@@ -26,7 +26,7 @@ export default function SocialLinks() {
   return (
     <ul
       ref={scope}
-      className={`flex flex-row text-gray-300 [&_a]:focus:text-white [&_a]:focus:outline-hidden [&_a]:focus:ring-0 [&_li]:mx-1 [&_li]:my-0.5 [&_li]:p-1 [&_li]:drop-shadow-md [&_li]:hover:text-white transition-all duration-200`}
+      className={`flex flex-row text-gray-300 [&_a]:focus:text-white [&_a]:focus:outline-hidden [&_a]:focus:ring-0 [&_li]:mx-1.5 [&_li]:my-1 [&_li]:p-1 [&_li]:drop-shadow-md [&_li]:hover:text-white transition-all duration-200`}
     >
       <li>
         <a target="_blank" href="https://github.com/Ceddix">
@@ -58,6 +58,12 @@ export default function SocialLinks() {
       <li>
         <a target="_blank" href="https://discord.com/users/463620307245072384">
           <TbBrandDiscord size={32}/>
+        </a>
+      </li>
+
+      <li>
+        <a target="_blank" href="https://www.linkedin.com/in/cedrik-secic/">
+          <TbBrandLinkedin size={32}/>
         </a>
       </li>
 
