@@ -32,8 +32,8 @@ export default function About() {
                     </a>
                 </div>
 
-                {/* @ts-expect-error Async Server Component */}
                 <MDXRemote source={markdownFile} components={{Image, ContactForm, ContactLink, TbBrandDiscord, TbBrandInstagram, TbMail, TbCompass, TbMap, a: CustomLink}}/>
+
             </div>
         </>
     );
