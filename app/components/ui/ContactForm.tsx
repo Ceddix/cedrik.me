@@ -55,7 +55,7 @@ export default function ContactForm() {
 
     return (
         <form onSubmit={submit}
-              className={`rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 p-4 text-md leading-normal shadow-lg space-y-4 w-2/3`}>
+              className={`rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 p-4 text-md leading-normal shadow-lg space-y-4`}>
             <div>
                 <label className={`block mb-1 text-sm font-medium text-white`}>
                     Your email
