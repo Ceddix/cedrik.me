@@ -8,6 +8,16 @@ import { TbBrandGithub, TbBrandSpotify, TbBrandInstagram, TbBrandThreads, TbBran
 
 export default function SocialLinks() {
   const [scope, animate] = useAnimate();
+  const links = [
+      { name: "GitHub", url: "https://github.com/Ceddix", icon: TbBrandGithub },
+      { name: "Spotify", url: "https://open.spotify.com/user/2fy35e57mzi84b2zhafnu7t5r?si=b11fa648285e413f", icon: TbBrandSpotify },
+      { name: "Instagram", url: "https://instagram.com/cedrik.sc_", icon: TbBrandInstagram },
+      { name: "Threads", url: "https://threads.net/@cedrik.sc_", icon: TbBrandThreads },
+      { name: "Discord", url: "https://discord.com/users/463620307245072384", icon: TbBrandDiscord },
+      { name: "LinkedIn", url: "https://www.linkedin.com/in/cedrik-secic/", icon: TbBrandLinkedin },
+      //{ name: "Mastodon", url: "https://mastodon.social/@cedrik_sc", icon: TbBrandMastodon },
+      //{ name: "Twitter", url: "https://twitter.com/cedrik_sc", icon: TbBrandXTwitter },
+  ];
 
   useEffect(() => {
     animate(
@@ -28,56 +38,15 @@ export default function SocialLinks() {
       ref={scope}
       className={`flex flex-row text-gray-300 [&_a]:focus:text-white [&_a]:focus:outline-hidden [&_a]:focus:ring-0 [&_li]:mx-1 [&_li]:my-0.5 [&_li]:p-1 [&_li]:drop-shadow-md [&_li]:hover:text-white transition-all duration-200`}
     >
-      <li>
-        <a target="_blank" href="https://github.com/Ceddix">
-          <TbBrandGithub size={32}/>
-        </a>
-      </li>
 
-      <li>
-        <a
-          target="_blank"
-          href="https://open.spotify.com/user/2fy35e57mzi84b2zhafnu7t5r?si=b11fa648285e413f"
-        >
-          <TbBrandSpotify size={32}/>
-        </a>
-      </li>
+        {links.map((link, index) =>
+            <li key={index}>
+                <a target={"_blank"} href={link.url}>
+                    <link.icon size={32}/>
+                </a>
+            </li>
+        )}
 
-      <li>
-        <a target="_blank" href="https://instagram.com/cedrik.sc_">
-          <TbBrandInstagram size={32}/>
-        </a>
-      </li>
-
-      <li>
-        <a target="_blank" href="https://threads.net/@cedrik.sc_">
-          <TbBrandThreads size={32}/>
-        </a>
-      </li>
-
-      <li>
-        <a target="_blank" href="https://discord.com/users/463620307245072384">
-          <TbBrandDiscord size={32}/>
-        </a>
-      </li>
-
-      <li>
-        <a target="_blank" href="https://www.linkedin.com/in/cedrik-secic/">
-          <TbBrandLinkedin size={32}/>
-        </a>
-      </li>
-
-      {/*<li>*/}
-      {/*  <a target="_blank" href="https://mastodon.social/@cedrik_sc" rel="me">*/}
-      {/*    <FontAwesomeIcon icon={faMastodon} />*/}
-      {/*  </a>*/}
-      {/*</li>*/}
-
-      {/*<li>*/}
-      {/*  <a target="_blank" href="https://twitter.com/cedrik_sc">*/}
-      {/*    <FontAwesomeIcon icon={faXTwitter} />*/}
-      {/*  </a>*/}
-      {/*</li>*/}
     </ul>
   );
 }
