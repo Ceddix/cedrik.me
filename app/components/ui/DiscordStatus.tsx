@@ -11,17 +11,28 @@ export default function DiscordStatus() {
   const status = socket?.discord_status || "loading";
 
   return (
-    <span
-      className={clsx(
-        "absolute bottom-2 right-6 h-6 w-6 rounded-full border-4 border-zinc-800 transition duration-300",
-        {
-          ["bg-green-400"]: status === "online",
-          ["bg-orange-400"]: status === "idle",
-          ["bg-red-500"]: status === "dnd",
-          ["bg-zinc-800 opacity-0"]:
-            status === "offline" || status === "loading",
-        },
-      )}
-    />
-  );
+      <span className={"absolute flex size-4 bottom-2 right-8 transition duration-300 shadow-md"}>
+          <span className={clsx(
+              "absolute inline-flex h-full w-full opacity-75 rounded-full animate-[ping_3s_ease-out_infinite]",
+              {
+                  ["bg-green-400"]: status === "online",
+                  ["bg-orange-400"]: status === "idle",
+                  ["bg-red-500"]: status === "dnd",
+                  ["bg-zinc-800 opacity-0!"]:
+                      status === "offline" || status === "loading",
+              }
+          )}/>
+          <span className={clsx(
+              "relative inline-flex size-4 rounded-full",
+              {
+                  ["bg-green-400"]: status === "online",
+                  ["bg-orange-400"]: status === "idle",
+                  ["bg-red-500"]: status === "dnd",
+                  ["bg-zinc-800 opacity-0"]:
+                      status === "offline" || status === "loading",
+              }
+          )}/>
+      </span>
+  )
+
 }

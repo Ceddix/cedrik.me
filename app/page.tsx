@@ -21,7 +21,7 @@ export default function Home() {
                         <Image
                             src={`/profile.png`}
                             alt={`profile`}
-                            className={`rounded-full border-8 border-zinc-800 object-cover`}
+                            className={`rounded-full border-6 border-zinc-800/90 object-cover shadow-md`}
                             quality={100}
                             width={170}
                             height={170}
