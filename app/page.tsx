@@ -41,20 +41,15 @@ export default function Home() {
 
                     <div className={"w-full max-w-[31.15rem] px-9"}>
                         <Link
-                            /*href={"/about"}
+                            href={"/about"}
                             className={
-                                "group my-3 inline-block w-full rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg transition duration-200 ease-in-out hover:bg-neutral-600/60 focus:bg-neutral-900/60 focus:outline-hidden focus:ring-0 active:bg-neutral-950"
-                            }*/
-                            href={"/"}
-                            className={
-                                "opacity-60 pointer-events-none group my-2.5 inline-block w-full rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg"
+                                "group my-2.5 inline-block w-full rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg transition duration-200 ease-in-out hover:bg-neutral-600/60 focus:bg-neutral-900/60 focus:outline-hidden focus:ring-0 active:bg-neutral-950"
                             }
                         >
-                            about me (coming soon)
-                            {/*about me
+                            about me
                             <TbArrowNarrowRight
                                 className={`ml-1 inline transition duration-1000 group-hover:translate-x-[.2rem]`}
-                            />*/}
+                            />
                         </Link>
                     </div>
 
