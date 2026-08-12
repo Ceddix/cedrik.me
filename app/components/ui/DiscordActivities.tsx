@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useLanyardWS } from "use-lanyard";
+import { useLanyard } from "use-lanyard";
 import { discordId } from "@/app/components/Constants";
 import { IoGameController } from "react-icons/io5";
 import { TbBrandSpotify } from "react-icons/tb";
@@ -349,7 +349,7 @@ function GameCard({
 // ─── Main component ──────────────────────────────────────────────────────────
 
 export default function DiscordActivities() {
-  const socket = useLanyardWS(discordId);
+  const socket = useLanyard(discordId);
   const status = socket?.discord_status || "loading";
   const activitiesRaw = socket?.activities || [];
   const lanyardSpotify = socket?.spotify;
