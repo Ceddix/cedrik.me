@@ -8,7 +8,14 @@ export async function POST(request: NextRequest) {
 
     const adminSecret = process.env.ADMIN_SECRET || '';
 
-    if (adminSecret && secret && secret === adminSecret) {
+    if (!adminSecret) {
+      return NextResponse.json(
+        { success: false, error: 'ADMIN_SECRET environment variable is not configured on the server' },
+        { status: 500 }
+      );
+    }
+
+    if (secret && secret === adminSecret) {
       await setAdminSession({
         id: 'admin',
         username: 'Cedrik',

@@ -4,6 +4,10 @@ import { isRequestAuthorized } from '@/app/lib/auth';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
+  if (!process.env.ADMIN_SECRET) {
+    return NextResponse.json({ status: 'error', message: 'ADMIN_SECRET environment variable is not configured on the server' }, { status: 500 });
+  }
+
   const isAuth = await isRequestAuthorized(request);
   if (!isAuth) {
     return NextResponse.json({ status: 'error', message: 'Unauthorized ShareX API key' }, { status: 401 });

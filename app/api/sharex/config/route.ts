@@ -7,6 +7,14 @@ export async function GET(request: NextRequest) {
   const origin = `${protocol}://${host}`;
 
   const adminSecret = process.env.ADMIN_SECRET || '';
+
+  if (!adminSecret) {
+    return NextResponse.json(
+      { error: 'ADMIN_SECRET environment variable is not configured on the server' },
+      { status: 500 }
+    );
+  }
+
   const configName = `cedrik.me URL Shortener [${host.includes('localhost') ? 'Local' : 'Prod'}]`;
 
   const sxcuConfig = {
