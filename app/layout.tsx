@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import "@/app/globals.css";
 import Image from "next/image";
 import { Analytics } from '@vercel/analytics/react';
-import DiscordActivities from "@/app/components/ui/DiscordActivities";
 
 import { Poppins } from "next/font/google";
 const poppins = Poppins({
@@ -38,27 +37,27 @@ export default function RootLayout({
   children: ReactNode;
 }) {
   return (
-    <html lang="en" className={`${poppins.variable}`}>
+    <html lang="en" className={`${poppins.variable}`} data-scroll-behavior="smooth">
       <body className={`font-sans`}>
-        <div className={`h-screen`}>
+        <div className={`relative min-h-screen`}>
 
           <Image
             src={`/profile.png`}
             alt={`background`}
             quality={100}
             fill
+            priority
+            loading="eager"
             sizes="100vw"
             className={`object-cover`}
           />
 
           <div
-            className={`h-screen bg-[#16161A]/80 backdrop-blur-2xl`}
+            className={`min-h-screen bg-[#16161A]/80 backdrop-blur-2xl overflow-y-auto`}
             style={{ boxShadow: "inset 0 0 20px 1px #141417" }}>
 
             {children}
             <Analytics />
-            {/* Discord Activities: WIP (see discord-activities branch) */}
-            <DiscordActivities />
 
           </div>
 

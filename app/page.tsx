@@ -4,14 +4,13 @@ import PageWrapper from "@/app/components/PageWrapper";
 
 import SocialLinks from "@/app/components/ui/SocialLinks";
 import DiscordStatus from "@/app/components/ui/DiscordStatus";
+import DiscordActivities from "@/app/components/ui/DiscordActivities";
 import { getAge } from "@/app/lib/age";
 import { TbArrowNarrowRight } from "react-icons/tb";
 
 export default async function Home() {
     const userAge = await getAge();
     return (
-        // Activity
-
         <>
             <PageWrapper>
                 <main className={`flex min-h-[70vh] flex-col justify-center items-center text-center`}>
@@ -22,6 +21,8 @@ export default async function Home() {
                             alt={`profile`}
                             className={`rounded-full border-6 border-zinc-800/90 object-cover shadow-md`}
                             quality={100}
+                            priority
+                            loading="eager"
                             width={170}
                             height={170}
                         />
@@ -61,6 +62,7 @@ export default async function Home() {
 
                 </main>
             </PageWrapper>
+            <DiscordActivities />
         </>
     );
 }
