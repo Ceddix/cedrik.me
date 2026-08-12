@@ -1,4 +1,4 @@
-import React from "react";
+import type { ReactNode } from "react";
 
 import "@/app/globals.css";
 import Image from "next/image";
@@ -35,7 +35,7 @@ export const metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <html lang="en" className={`${poppins.variable}`}>

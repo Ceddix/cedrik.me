@@ -1,5 +1,3 @@
-import React from "react";
-
 import Link from 'next/link';
 import { TbArrowNarrowLeft } from "react-icons/tb";
 import PageWrapper from "@/app/components/PageWrapper";
