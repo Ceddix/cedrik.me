@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, connection } from "next/server";
 
 const SPOTIFY_TOKEN_URL = "https://accounts.spotify.com/api/token";
 const SPOTIFY_NOW_PLAYING_URL =
@@ -30,6 +30,7 @@ async function getAccessToken(): Promise<string> {
 }
 
 export async function GET() {
+  await connection();
   try {
     const accessToken = await getAccessToken();
 
