@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import { SITE_CONFIG } from "./app/lib/config";
 
 const nextConfig: NextConfig = {
+    images: {
+        qualities: [25, 50, 75, 100],
+    },
     cacheComponents: true,
     async redirects() {
         return [
