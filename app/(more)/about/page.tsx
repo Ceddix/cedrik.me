@@ -31,7 +31,7 @@ export default async function About() {
                     </a>
                 </div>
 
-                <MDXRemote source={markdownFile} options={{ scope: { age: userAge } }} components={{ Image, ContactForm, ContactLink, TbBrandDiscord, TbBrandInstagram, TbMail, a: CustomLink }} />
+                <MDXRemote source={markdownFile} components={{ Age: () => <>{userAge}</>, Image, ContactForm, ContactLink, TbBrandDiscord, TbBrandInstagram, TbMail, a: CustomLink }} />
 
             </div>
         </>
