@@ -399,6 +399,12 @@ export default function DiscordActivities() {
     return () => clearInterval(interval);
   }, [lanyardSpotify, fetchSpotify]);
 
+  const activitiesKey = JSON.stringify({
+    lanyardSpotify,
+    spotifyFallback,
+    activitiesRaw,
+  });
+
   // ── Build activity list ──
   useEffect(() => {
     const list: any[] = [];
@@ -440,7 +446,8 @@ export default function DiscordActivities() {
     }
 
     setActivities(list);
-  }, [activitiesRaw, lanyardSpotify, spotifyFallback]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activitiesKey]);
 
   const getAssetUrl = (applicationId?: string, assetId?: string) => {
     if (!assetId) return "";
