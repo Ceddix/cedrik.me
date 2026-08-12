@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export default function CustomLink(props : any){
-    const href = props.href;
-    const isInternalLink = href && (href.startsWith('/'));
+    const href = typeof props?.href === 'string' ? props.href : '';
+    const isInternalLink = href.startsWith('/');
 
     if (isInternalLink) {
         return (
@@ -12,5 +12,5 @@ export default function CustomLink(props : any){
         );
     }
 
-    return <a target="_blank" {...props} />;
+    return <a target="_blank" rel="noopener noreferrer" {...props} />;
 };

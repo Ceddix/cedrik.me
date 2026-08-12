@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-    images: {
-        qualities: [25, 50, 75, 100]
-    },
     async redirects() {
         return [
             {
