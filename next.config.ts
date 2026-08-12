@@ -1,43 +1,47 @@
-/** @type {import('next').NextConfig} */
-module.exports = {
+import type { NextConfig } from "next";
+import { SITE_CONFIG } from "./app/lib/config";
+
+const nextConfig: NextConfig = {
     cacheComponents: true,
     async redirects() {
         return [
             {
                 source: '/github',
-                destination: 'https://github.com/ceddix/',
+                destination: SITE_CONFIG.socials.github,
                 permanent: true,
             },
             {
                 source: '/spotify',
-                destination: 'https://open.spotify.com/user/2fy35e57mzi84b2zhafnu7t5r?si=b11fa648285e413f',
+                destination: SITE_CONFIG.socials.spotify,
                 permanent: true,
             },
             {
                 source: '/instagram',
-                destination: 'https://instagram.com/cedrik.sc_',
+                destination: SITE_CONFIG.socials.instagram,
                 permanent: true,
             },
             {
                 source: '/threads',
-                destination: 'https://threads.net/cedrik.sc_',
+                destination: SITE_CONFIG.socials.threads,
                 permanent: true,
             },
             {
                 source: '/discord',
-                destination: 'https://discord.com/users/463620307245072384',
+                destination: SITE_CONFIG.socials.discord,
                 permanent: true,
             },
             {
                 source: '/linkedin',
-                destination: 'https://www.linkedin.com/in/cedrik-secic/',
+                destination: SITE_CONFIG.socials.linkedin,
                 permanent: true,
             },
             {
                 source: '/donate',
-                destination: 'https://paypal.me/cedriksc',
+                destination: SITE_CONFIG.socials.donate,
                 permanent: true,
             },
-        ]
+        ];
     },
-}
+};
+
+export default nextConfig;
