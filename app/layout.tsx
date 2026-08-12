@@ -38,29 +38,28 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${poppins.variable}`} data-scroll-behavior="smooth">
-      <body className={`font-sans`}>
-        <div className={`relative min-h-screen`}>
-
+      <body className="font-sans bg-[#16161A]">
+        {/* Fixed background image - locked to viewport height, never expands on scroll */}
+        <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
           <Image
-            src={`/profile.png`}
-            alt={`background`}
+            src="/profile.png"
+            alt="background"
             quality={100}
             fill
             priority
             loading="eager"
             sizes="100vw"
-            className={`object-cover`}
+            className="object-cover"
           />
+        </div>
 
-          <div
-            className={`min-h-screen bg-[#16161A]/80 backdrop-blur-2xl overflow-y-auto`}
-            style={{ boxShadow: "inset 0 0 20px 1px #141417" }}>
-
-            {children}
-            <Analytics />
-
-          </div>
-
+        {/* Scrollable content container with backdrop blur */}
+        <div
+          className="min-h-screen bg-[#16161A]/80 backdrop-blur-2xl"
+          style={{ boxShadow: "inset 0 0 20px 1px #141417" }}
+        >
+          {children}
+          <Analytics />
         </div>
       </body>
     </html>
