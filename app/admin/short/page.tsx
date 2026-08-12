@@ -37,10 +37,22 @@ export default function AdminShortPage() {
   const [secretError, setSecretError] = useState("");
   const [loggingIn, setLoggingIn] = useState(false);
 
-  // Links data
+  // Links data & pagination
   const [links, setLinks] = useState<ShortLink[]>([]);
   const [fetchingLinks, setFetchingLinks] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalFilteredLinks, setTotalFilteredLinks] = useState(0);
+  const [stats, setStats] = useState<{
+    totalLinks: number;
+    totalClicks: number;
+    topLink: { alias: string; visit_count: number } | null;
+  }>({
+    totalLinks: 0,
+    totalClicks: 0,
+    topLink: null,
+  });
 
   // Create Form State
   const [targetUrl, setTargetUrl] = useState("");
@@ -74,6 +86,15 @@ export default function AdminShortPage() {
     checkAuth();
   }, []);
 
+  // Search debounce effect
+  useEffect(() => {
+    if (!authenticated) return;
+    const timer = setTimeout(() => {
+      fetchLinks(1, searchQuery);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
   const checkAuth = async () => {
     setLoading(true);
     try {
@@ -81,7 +102,7 @@ export default function AdminShortPage() {
       const data = await res.json();
       setAuthenticated(data.authenticated);
       if (data.authenticated) {
-        fetchLinks();
+        fetchLinks(1, "");
       }
     } catch {
       setAuthenticated(false);
@@ -109,7 +130,7 @@ export default function AdminShortPage() {
       if (res.ok && data.success) {
         setAuthenticated(true);
         showToast("Logged in successfully!");
-        fetchLinks();
+        fetchLinks(1, "");
       } else {
         setSecretError(data.error || "Invalid secret key.");
       }
@@ -128,14 +149,27 @@ export default function AdminShortPage() {
     showToast("Logged out");
   };
 
-  // 4. Fetch Links
-  const fetchLinks = async () => {
+  // 4. Fetch Links with Pagination & Search
+  const fetchLinks = async (page = currentPage, query = searchQuery) => {
     setFetchingLinks(true);
     try {
-      const res = await fetch("/api/admin/short");
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: "25",
+        q: query,
+      });
+      const res = await fetch(`/api/admin/short?${params.toString()}`);
       if (res.ok) {
         const data = await res.json();
         setLinks(data.links || []);
+        if (data.pagination) {
+          setCurrentPage(data.pagination.page);
+          setTotalPages(data.pagination.totalPages);
+          setTotalFilteredLinks(data.pagination.totalLinks);
+        }
+        if (data.stats) {
+          setStats(data.stats);
+        }
       }
     } catch (err) {
       console.error("Failed to fetch links", err);
@@ -265,16 +299,6 @@ export default function AdminShortPage() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Filtered links
-  const filteredLinks = links.filter(
-    (l) =>
-      l.alias.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      l.target.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const totalClicks = links.reduce((acc, l) => acc + (l.visit_count || 0), 0);
-  const topLink = links.length > 0 ? [...links].sort((a, b) => b.visit_count - a.visit_count)[0] : null;
-
   const currentDomain = typeof window !== "undefined" ? window.location.host : "cedrik.me";
 
   if (loading) {
@@ -385,21 +409,21 @@ export default function AdminShortPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-neutral-800/30 border border-gray-300/10 rounded-2xl p-5 backdrop-blur-xl shadow-xl">
               <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Total Short Links</p>
-              <p className="text-3xl font-extrabold text-zinc-100 font-mono">{links.length}</p>
+              <p className="text-3xl font-extrabold text-zinc-100 font-mono">{stats.totalLinks}</p>
             </div>
 
             <div className="bg-neutral-800/30 border border-gray-300/10 rounded-2xl p-5 backdrop-blur-xl shadow-xl">
               <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Total Visits / Clicks</p>
-              <p className="text-3xl font-extrabold text-emerald-400 font-mono">{totalClicks.toLocaleString()}</p>
+              <p className="text-3xl font-extrabold text-emerald-400 font-mono">{stats.totalClicks.toLocaleString()}</p>
             </div>
 
             <div className="bg-neutral-800/30 border border-gray-300/10 rounded-2xl p-5 backdrop-blur-xl shadow-xl">
               <p className="text-xs font-medium text-zinc-400 uppercase tracking-wider mb-1">Most Clicked Link</p>
-              {topLink ? (
+              {stats.topLink ? (
                 <div className="flex items-center justify-between gap-2 mt-1">
-                  <span className="text-lg font-bold text-zinc-200 font-mono truncate">/s/{topLink.alias}</span>
+                  <span className="text-lg font-bold text-zinc-200 font-mono truncate">/s/{stats.topLink.alias}</span>
                   <span className="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                    {topLink.visit_count} clicks
+                    {stats.topLink.visit_count} clicks
                   </span>
                 </div>
               ) : (
@@ -481,7 +505,7 @@ export default function AdminShortPage() {
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <h2 className="text-lg font-bold text-zinc-100 flex items-center gap-2">
-                Existing Short Links ({filteredLinks.length})
+                Existing Short Links ({totalFilteredLinks})
               </h2>
 
               <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -497,7 +521,7 @@ export default function AdminShortPage() {
                 </div>
 
                 <button
-                  onClick={fetchLinks}
+                  onClick={() => fetchLinks(currentPage, searchQuery)}
                   title="Refresh links"
                   className="p-2 bg-zinc-900/60 border border-zinc-700/60 text-zinc-400 hover:text-zinc-100 rounded-2xl transition-all"
                 >
@@ -506,7 +530,7 @@ export default function AdminShortPage() {
               </div>
             </div>
 
-            {filteredLinks.length === 0 ? (
+            {links.length === 0 ? (
               <div className="bg-neutral-800/30 border border-gray-300/10 rounded-3xl p-12 text-center text-zinc-500 backdrop-blur-xl">
                 <TbLink className="text-4xl mx-auto mb-2 text-zinc-600" />
                 <p className="text-sm">No shortened links found.</p>
@@ -524,7 +548,7 @@ export default function AdminShortPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-800/60">
-                      {filteredLinks.map((link) => (
+                      {links.map((link) => (
                         <tr key={link.id} className="hover:bg-zinc-800/40 transition-colors">
                           {/* Alias */}
                           <td className="py-3.5 px-4 font-mono font-bold text-emerald-400 whitespace-nowrap">
@@ -591,6 +615,36 @@ export default function AdminShortPage() {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Pagination Bar */}
+                {totalPages > 1 && (
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-zinc-950/60 border-t border-zinc-800/80 text-xs text-zinc-400">
+                    <div>
+                      Showing <span className="font-mono text-zinc-200">{(currentPage - 1) * 25 + 1}</span> to{" "}
+                      <span className="font-mono text-zinc-200">{Math.min(currentPage * 25, totalFilteredLinks)}</span> of{" "}
+                      <span className="font-mono text-zinc-200">{totalFilteredLinks}</span> links
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => fetchLinks(currentPage - 1, searchQuery)}
+                        disabled={currentPage <= 1 || fetchingLinks}
+                        className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-700/60 rounded-xl hover:bg-zinc-800 disabled:opacity-40 font-medium transition-all"
+                      >
+                        Previous
+                      </button>
+                      <span className="font-mono text-zinc-300 px-2">
+                        Page {currentPage} of {totalPages}
+                      </span>
+                      <button
+                        onClick={() => fetchLinks(currentPage + 1, searchQuery)}
+                        disabled={currentPage >= totalPages || fetchingLinks}
+                        className="px-3 py-1.5 bg-zinc-900/80 border border-zinc-700/60 rounded-xl hover:bg-zinc-800 disabled:opacity-40 font-medium transition-all"
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

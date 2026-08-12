@@ -12,8 +12,63 @@ export async function GET(request: NextRequest) {
   try {
     await initLinksTable();
     const sql = getDb();
-    const rows = await sql`SELECT * FROM links ORDER BY id DESC`;
-    return NextResponse.json({ links: rows });
+
+    const searchParams = request.nextUrl.searchParams;
+    const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+    const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '25', 10)));
+    const query = (searchParams.get('q') || '').trim();
+    const offset = (page - 1) * limit;
+
+    // Overall stats
+    const totalCountRes = await sql`SELECT COUNT(*)::int as count FROM links`;
+    const totalClicksRes = await sql`SELECT COALESCE(SUM(visit_count), 0)::int as total_clicks FROM links`;
+    const topLinkRes = await sql`SELECT alias, visit_count FROM links ORDER BY visit_count DESC LIMIT 1`;
+
+    const totalLinks = totalCountRes[0]?.count || 0;
+    const totalClicks = totalClicksRes[0]?.total_clicks || 0;
+    const topLink = topLinkRes[0] || null;
+
+    let rows;
+    let filteredCount = totalLinks;
+
+    if (query) {
+      const searchPattern = `%${query}%`;
+      const filteredRes = await sql`
+        SELECT COUNT(*)::int as count FROM links 
+        WHERE alias ILIKE ${searchPattern} OR target ILIKE ${searchPattern}
+      `;
+      filteredCount = filteredRes[0]?.count || 0;
+
+      rows = await sql`
+        SELECT * FROM links 
+        WHERE alias ILIKE ${searchPattern} OR target ILIKE ${searchPattern}
+        ORDER BY id DESC 
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+    } else {
+      rows = await sql`
+        SELECT * FROM links 
+        ORDER BY id DESC 
+        LIMIT ${limit} OFFSET ${offset}
+      `;
+    }
+
+    const totalPages = Math.max(1, Math.ceil(filteredCount / limit));
+
+    return NextResponse.json({
+      links: rows,
+      pagination: {
+        page,
+        limit,
+        totalLinks: filteredCount,
+        totalPages,
+      },
+      stats: {
+        totalLinks,
+        totalClicks,
+        topLink,
+      },
+    });
   } catch (err: any) {
     console.error('Error fetching links:', err);
     return NextResponse.json({ error: 'Failed to fetch links', details: err.message }, { status: 500 });
