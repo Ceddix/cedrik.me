@@ -1,15 +1,14 @@
-import React from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 import PageWrapper from "@/app/components/PageWrapper";
 
 import SocialLinks from "@/app/components/ui/SocialLinks";
 import DiscordStatus from "@/app/components/ui/DiscordStatus";
-import { age } from "@/app/components/Constants";
+import { getAge } from "@/app/lib/age";
 import { TbArrowNarrowRight } from "react-icons/tb";
 
-export default function Home() {
+export default async function Home() {
+    const userAge = await getAge();
     return (
         // Activity
 
@@ -36,7 +35,7 @@ export default function Home() {
 
                     <div className={`text-[1.2rem] text-gray-300`}>
                         <span className={`font-bold`}>hi, i'm cedrik, </span>
-                        a {age.toString()} y/o student from belgium
+                        a {userAge.toString()} y/o student from belgium
                     </div>
 
                     <div className={"w-full max-w-[31.15rem] px-9"}>
