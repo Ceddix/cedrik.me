@@ -39,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable}`} data-scroll-behavior="smooth">
       <body className="font-sans bg-[#16161A]">
-        {/* Fixed background image - locked to viewport height, never expands on scroll */}
+        {/* Fixed background image with backdrop blur layer - locked to viewport */}
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
           <Image
             src="/profile.png"
@@ -51,16 +51,17 @@ export default function RootLayout({
             sizes="100vw"
             className="object-cover"
           />
+          <div
+            className="absolute inset-0 bg-[#16161A]/80 backdrop-blur-2xl"
+            style={{ boxShadow: "inset 0 0 20px 1px #141417" }}
+          />
         </div>
 
-        {/* Scrollable content container with backdrop blur */}
-        <div
-          className="min-h-screen bg-[#16161A]/80 backdrop-blur-2xl"
-          style={{ boxShadow: "inset 0 0 20px 1px #141417" }}
-        >
+        <div className="min-h-screen">
           {children}
           <Analytics />
         </div>
+
       </body>
     </html>
   );
