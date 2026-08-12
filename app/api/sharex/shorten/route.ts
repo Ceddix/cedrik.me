@@ -16,24 +16,25 @@ export async function POST(request: NextRequest) {
     let alias = '';
 
     const contentType = request.headers.get('content-type') || '';
-    if (contentType.includes('application/json')) {
-      const body = await request.json();
-      target = body.url || body.target || body.URL || '';
-      alias = body.alias || body.slug || body.name || '';
-    } else if (contentType.includes('form-data') || contentType.includes('urlencoded')) {
-      const formData = await request.formData();
-      target = (formData.get('url') || formData.get('target') || formData.get('URL') || '').toString();
-      alias = (formData.get('alias') || formData.get('slug') || formData.get('name') || '').toString();
-    } else {
-      // Fallback text or query params
-      const bodyText = await request.text();
+    const bodyText = await request.text();
+
+    if (contentType.includes('application/json') || bodyText.trim().startsWith('{')) {
       try {
-        const parsed = JSON.parse(bodyText);
-        target = parsed.url || parsed.target || '';
-        alias = parsed.alias || parsed.slug || '';
-      } catch {
-        target = bodyText.trim();
-      }
+        const body = JSON.parse(bodyText);
+        target = body.url || body.target || body.URL || '';
+        alias = body.alias || body.slug || body.name || '';
+      } catch {}
+    }
+
+    if (!target) {
+      const params = new URLSearchParams(bodyText);
+      target = params.get('url') || params.get('target') || params.get('URL') || '';
+      alias = alias || params.get('alias') || params.get('slug') || params.get('name') || '';
+    }
+
+    // Direct string fallback
+    if (!target && bodyText && !bodyText.includes('=')) {
+      target = bodyText.trim();
     }
 
     if (!target) {
@@ -85,8 +86,9 @@ export async function POST(request: NextRequest) {
       VALUES (${alias}, ${target}, 0)
     `;
 
-    const host = request.headers.get('host') || 'cedrik.me';
-    const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
+    const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'cedrik.me';
+    const protoHeader = request.headers.get('x-forwarded-proto');
+    const protocol = protoHeader || (host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https');
     const origin = `${protocol}://${host}`;
     const shortUrl = `${origin}/s/${alias}`;
 

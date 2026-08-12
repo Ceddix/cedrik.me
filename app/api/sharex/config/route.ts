@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const host = request.headers.get('host') || 'cedrik.me';
-  const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || 'cedrik.me';
+  const protoHeader = request.headers.get('x-forwarded-proto');
+  const protocol = protoHeader || (host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https');
   const origin = `${protocol}://${host}`;
 
   const adminSecret = process.env.ADMIN_SECRET || '';
