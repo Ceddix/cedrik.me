@@ -19,6 +19,7 @@ interface SpotifyFallback {
   trackId: string;
   progress: number;
   duration: number;
+  fetchedAt?: number;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -127,7 +128,8 @@ function useSpotifyProgress(
   start?: number,
   end?: number,
   apiProgress?: number,
-  apiDuration?: number
+  apiDuration?: number,
+  fetchedAt?: number
 ) {
   const [progress, setProgress] = useState(0);
   const frameRef = useRef<number>(0);
@@ -141,6 +143,8 @@ function useSpotifyProgress(
       return;
     }
 
+    const initialTime = fetchedAt || Date.now();
+
     const tick = () => {
       if (hasLanyard) {
         const now = Date.now();
@@ -148,14 +152,17 @@ function useSpotifyProgress(
         const duration = end! - start!;
         setProgress(duration > 0 ? Math.min(elapsed / duration, 1) : 0);
       } else if (hasApi) {
-        setProgress(Math.min(apiProgress! / apiDuration!, 1));
+        const now = Date.now();
+        const elapsedSinceFetch = now - initialTime;
+        const currentMs = apiProgress! + elapsedSinceFetch;
+        setProgress(Math.min(currentMs / apiDuration!, 1));
       }
       frameRef.current = requestAnimationFrame(tick);
     };
 
     frameRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frameRef.current);
-  }, [start, end, apiProgress, apiDuration]);
+  }, [start, end, apiProgress, apiDuration, fetchedAt]);
 
   return progress;
 }
@@ -192,6 +199,7 @@ function SpotifyCard({
   timestampEnd,
   apiProgress,
   apiDuration,
+  fetchedAt,
 }: {
   song: string;
   artist: string;
@@ -201,12 +209,14 @@ function SpotifyCard({
   timestampEnd?: number;
   apiProgress?: number;
   apiDuration?: number;
+  fetchedAt?: number;
 }) {
   const progress = useSpotifyProgress(
     timestampStart,
     timestampEnd,
     apiProgress,
-    apiDuration
+    apiDuration,
+    fetchedAt
   );
 
   const duration = timestampEnd && timestampStart
@@ -367,7 +377,12 @@ export default function DiscordActivities() {
     try {
       const res = await fetch("/api/now-playing");
       const data: SpotifyFallback = await res.json();
-      setSpotifyFallback(data.isPlaying ? data : null);
+      if (data.isPlaying) {
+        data.fetchedAt = Date.now();
+        setSpotifyFallback(data);
+      } else {
+        setSpotifyFallback(null);
+      }
     } catch {
       setSpotifyFallback(null);
     }
@@ -413,6 +428,7 @@ export default function DiscordActivities() {
         trackId: spotifyFallback.trackId,
         apiProgress: spotifyFallback.progress,
         apiDuration: spotifyFallback.duration,
+        fetchedAt: spotifyFallback.fetchedAt,
       });
     }
 
@@ -542,6 +558,7 @@ export default function DiscordActivities() {
                             timestampEnd={activity.timestampEnd}
                             apiProgress={activity.apiProgress}
                             apiDuration={activity.apiDuration}
+                            fetchedAt={activity.fetchedAt}
                           />
                         ) : (
                           <GameCard
