@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLanyard } from "use-lanyard";
-import { discordId } from "@/app/components/Constants";
+import { SITE_CONFIG } from "@/app/lib/config";
 import { IoGameController } from "react-icons/io5";
 import { TbBrandSpotify } from "react-icons/tb";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
@@ -349,7 +349,7 @@ function GameCard({
 // ─── Main component ──────────────────────────────────────────────────────────
 
 export default function DiscordActivities() {
-  const socket = useLanyard(discordId);
+  const socket = useLanyard(SITE_CONFIG.discordId);
   const status = socket?.discord_status || "loading";
   const activitiesRaw = socket?.activities || [];
   const lanyardSpotify = socket?.spotify;

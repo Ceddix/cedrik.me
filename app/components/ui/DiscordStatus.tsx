@@ -1,13 +1,11 @@
 "use client";
 
-import React from "react";
-
 import { useLanyard } from "use-lanyard";
-import { discordId } from "@/app/components/Constants";
+import { SITE_CONFIG } from "@/app/lib/config";
 import clsx from "clsx";
 
 export default function DiscordStatus() {
-  const socket = useLanyard(discordId);
+  const socket = useLanyard(SITE_CONFIG.discordId);
   const status = socket?.discord_status || "loading";
 
   return (
