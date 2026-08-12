@@ -180,7 +180,13 @@ export default function AdminShortPage() {
       if (!res.ok) {
         setCreateError(data.error || "Failed to create short link.");
       } else {
-        showToast(`Short link created: /s/${data.link.alias}`);
+        const origin = typeof window !== "undefined" ? window.location.origin : "https://cedrik.me";
+        const shortUrl = `${origin}/s/${data.link.alias}`;
+        try {
+          navigator.clipboard.writeText(shortUrl);
+          setCopiedId(data.link.id);
+        } catch {}
+        showToast(`Created & copied: /s/${data.link.alias}`);
         setTargetUrl("");
         setCustomAlias("");
         fetchLinks();
