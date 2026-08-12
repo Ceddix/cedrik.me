@@ -48,7 +48,7 @@ export async function proxy(request: NextRequest) {
 
             // If a row is returned, increment the visit_count for the link with the provided slug
             if (rows[0]) {
-                await sql`UPDATE links SET visit_count = visit_count + 1 WHERE alias = ${segments.slice(2).join('/')}`;
+                await sql`UPDATE links SET visit_count = COALESCE(visit_count, 0) + 1 WHERE alias = ${segments.slice(2).join('/')}`;
             }
 
             // Redirect to the target of the first row (the selected link)

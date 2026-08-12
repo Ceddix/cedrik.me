@@ -1,0 +1,104 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { getDb, initLinksTable } from '@/app/lib/db';
+import { isRequestAuthorized } from '@/app/lib/auth';
+import crypto from 'crypto';
+
+export async function POST(request: NextRequest) {
+  const isAuth = await isRequestAuthorized(request);
+  if (!isAuth) {
+    return NextResponse.json({ status: 'error', message: 'Unauthorized ShareX API key' }, { status: 401 });
+  }
+
+  try {
+    await initLinksTable();
+
+    let target = '';
+    let alias = '';
+
+    const contentType = request.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      const body = await request.json();
+      target = body.url || body.target || body.URL || '';
+      alias = body.alias || body.slug || body.name || '';
+    } else if (contentType.includes('form-data') || contentType.includes('urlencoded')) {
+      const formData = await request.formData();
+      target = (formData.get('url') || formData.get('target') || formData.get('URL') || '').toString();
+      alias = (formData.get('alias') || formData.get('slug') || formData.get('name') || '').toString();
+    } else {
+      // Fallback text or query params
+      const bodyText = await request.text();
+      try {
+        const parsed = JSON.parse(bodyText);
+        target = parsed.url || parsed.target || '';
+        alias = parsed.alias || parsed.slug || '';
+      } catch {
+        target = bodyText.trim();
+      }
+    }
+
+    if (!target) {
+      target = request.nextUrl.searchParams.get('url') || request.nextUrl.searchParams.get('target') || '';
+    }
+    if (!alias) {
+      alias = request.nextUrl.searchParams.get('alias') || request.nextUrl.searchParams.get('slug') || '';
+    }
+
+    if (!target) {
+      return NextResponse.json({ status: 'error', message: 'No target URL provided' }, { status: 400 });
+    }
+
+    target = target.trim();
+    if (!/^https?:\/\//i.test(target)) {
+      target = `https://${target}`;
+    }
+
+    try {
+      new URL(target);
+    } catch {
+      return NextResponse.json({ status: 'error', message: 'Invalid URL format' }, { status: 400 });
+    }
+
+    // Sanitize alias - if literal prompt text or unparsed syntax passed, clear it
+    if (alias && (alias.toLowerCase().includes('prompt') || alias.startsWith('{') || alias.startsWith('$'))) {
+      alias = '';
+    }
+
+    if (!alias || !alias.trim()) {
+      alias = crypto.randomBytes(3).toString('hex');
+    } else {
+      alias = alias
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9\-_/]/g, '-');
+    }
+
+    const sql = getDb();
+
+    // If custom alias specified and already exists, generate a random suffix
+    const existing = await sql`SELECT id FROM links WHERE alias = ${alias} LIMIT 1`;
+    if (existing && existing.length > 0) {
+      alias = `${alias}-${crypto.randomBytes(2).toString('hex')}`;
+    }
+
+    await sql`
+      INSERT INTO links (alias, target, visit_count)
+      VALUES (${alias}, ${target}, 0)
+    `;
+
+    const host = request.headers.get('host') || 'cedrik.me';
+    const protocol = host.includes('localhost') || host.includes('127.0.0.1') ? 'http' : 'https';
+    const origin = `${protocol}://${host}`;
+    const shortUrl = `${origin}/s/${alias}`;
+
+    return NextResponse.json({
+      status: 'success',
+      short_url: shortUrl,
+      url: shortUrl,
+      alias: alias,
+      target: target,
+    });
+  } catch (err: any) {
+    console.error('ShareX Shorten API Error:', err);
+    return NextResponse.json({ status: 'error', message: err.message }, { status: 500 });
+  }
+}
