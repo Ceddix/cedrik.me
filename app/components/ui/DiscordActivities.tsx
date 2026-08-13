@@ -661,6 +661,43 @@ export default function DiscordActivities() {
     return list;
   }, [lanyardSpotify, isDiscordOnline, spotifyFallback, activitiesRaw, selectedKey]);
 
+  const [introPeek, setIntroPeek] = useState(false);
+  const bouncedRef = useRef(false);
+  const touchStartY = useRef<number | null>(null);
+
+  // Trigger a brief peek bounce on initial load when multiple activities exist
+  useEffect(() => {
+    if (ready && activities.length > 1 && !bouncedRef.current) {
+      bouncedRef.current = true;
+      const t1 = setTimeout(() => setIntroPeek(true), 500);
+      const t2 = setTimeout(() => setIntroPeek(false), 1400);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, [ready, activities.length]);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartY.current === null) return;
+    const touchEndY = e.changedTouches[0].clientY;
+    const deltaY = touchEndY - touchStartY.current;
+    touchStartY.current = null;
+
+    // Swipe up (deltaY < -20) -> expand activities stack
+    if (deltaY < -20 && activities.length > 1) {
+      setExpanded(true);
+    }
+    // Swipe down (deltaY > 20) -> collapse activities stack
+    else if (deltaY > 20) {
+      setExpanded(false);
+    }
+  };
+
   const getAssetUrl = (applicationId?: string, assetId?: string) => {
     if (!assetId) return "";
     if (assetId.startsWith("mp:external/")) {
@@ -701,6 +738,8 @@ export default function DiscordActivities() {
             <div
               onMouseEnter={() => setExpanded(true)}
               onMouseLeave={() => setExpanded(false)}
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
               className="relative"
             >
               <div
@@ -725,7 +764,11 @@ export default function DiscordActivities() {
                         animate={{
                           opacity: 1,
                           scale: expanded ? 1 : 1 - index * 0.04,
-                          y: expanded ? 0 : -index * 10,
+                          y: expanded
+                            ? 0
+                            : introPeek
+                            ? -index * 22
+                            : -index * 11,
                           zIndex: 50 - index,
                         }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
