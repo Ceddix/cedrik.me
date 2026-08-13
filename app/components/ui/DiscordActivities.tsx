@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useLanyard } from "use-lanyard";
 import { SITE_CONFIG } from "@/app/lib/config";
 import { IoGameController } from "react-icons/io5";
-import { TbBrandSpotify } from "react-icons/tb";
+import { TbBrandSpotify, TbBrandDiscord } from "react-icons/tb";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import clsx from "clsx";
 
@@ -55,6 +55,7 @@ function formatTime(ms: number): string {
 /** Generate a stable key for an activity */
 function getActivityKey(activity: any, index: number): string {
   if (activity._type === "spotify") return "spotify";
+  if (activity._type === "status") return "custom-status";
   return (
     activity.id ||
     activity.session_id ||
@@ -451,6 +452,62 @@ function GameCard({
   );
 }
 
+function StatusCard({ activity }: { activity: any }) {
+  const emoji = activity.emoji;
+  const state = activity.state;
+  const customEmojiUrl = emoji?.id
+    ? `https://cdn.discordapp.com/emojis/${emoji.id}.${emoji.animated ? "gif" : "webp"}?size=64&quality=lossless`
+    : null;
+
+  return (
+    <div className="flex flex-row items-center gap-2.5 w-full h-full">
+      {/* Icon / Emoji */}
+      <div className="size-12 rounded-full border border-white/12.5 bg-neutral-800/80 shadow-md flex items-center justify-center shrink-0 overflow-hidden">
+        {customEmojiUrl ? (
+          <img
+            src={customEmojiUrl}
+            alt={emoji?.name || "status emoji"}
+            className="size-7 object-contain"
+          />
+        ) : emoji?.name ? (
+          <span className="text-2xl select-none leading-none">
+            {emoji.name}
+          </span>
+        ) : (
+          <TbBrandDiscord className="size-6 text-[#5865F2]" />
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="text-xs flex-1 min-w-0 flex flex-col justify-center py-0.5">
+        <p className="text-[0.6rem] text-neutral-400 truncate leading-tight">
+          Discord Status
+        </p>
+        <p
+          className="text-white text-xs font-semibold leading-snug line-clamp-2 break-words"
+          title={state || "Active"}
+        >
+          {state || "Active"}
+        </p>
+      </div>
+
+      {/* Discord link */}
+      {SITE_CONFIG.socials.discord && (
+        <a
+          href={SITE_CONFIG.socials.discord}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="shrink-0 p-1 rounded-full text-[#5865F2] hover:bg-[#5865F2]/15 transition-colors duration-200"
+          title="Open Discord Profile"
+        >
+          <TbBrandDiscord className="size-4" />
+        </a>
+      )}
+    </div>
+  );
+}
+
 // ─── Main component ──────────────────────────────────────────────────────────
 
 export default function DiscordActivities() {
@@ -532,9 +589,21 @@ export default function DiscordActivities() {
   }, [isDiscordOnline, fetchSpotify]);
 
   // ── Synchronously derive activity list (preserving user selection) ──
+  // Priority: 1. Discord Status -> 2. Spotify -> 3. Everything else
   const activities = useMemo(() => {
     const list: any[] = [];
 
+    // 1. Discord Status (Priority #1)
+    if (isDiscordOnline && activitiesRaw && Array.isArray(activitiesRaw)) {
+      const customActivity = activitiesRaw.find(
+        (a) => a.type === 4 || a.id === "custom"
+      );
+      if (customActivity && (customActivity.state || customActivity.emoji)) {
+        list.push({ ...customActivity, _type: "status" });
+      }
+    }
+
+    // 2. Spotify (Priority #2)
     if (lanyardSpotify) {
       list.push({
         _type: "spotify",
@@ -565,9 +634,15 @@ export default function DiscordActivities() {
       });
     }
 
+    // 3. Everything else / Games (Priority #3)
     if (activitiesRaw && Array.isArray(activitiesRaw)) {
       for (const activity of activitiesRaw) {
-        if (activity.name === "Spotify" || activity.type === 4) continue;
+        if (
+          activity.name === "Spotify" ||
+          activity.type === 4 ||
+          activity.id === "custom"
+        )
+          continue;
         list.push({ ...activity, _type: "game" });
       }
     }
@@ -637,6 +712,7 @@ export default function DiscordActivities() {
                 <AnimatePresence initial={false} mode="popLayout">
                   {activities.map((activity, index) => {
                     const isSpotify = activity._type === "spotify";
+                    const isStatus = activity._type === "status";
                     const key = getActivityKey(activity, index);
                     const isTop = index === 0;
                     const isStacked = !expanded && !isTop;
@@ -708,6 +784,8 @@ export default function DiscordActivities() {
                                 apiDuration={activity.apiDuration}
                                 fetchedAt={activity.fetchedAt}
                               />
+                            ) : isStatus ? (
+                              <StatusCard activity={activity} />
                             ) : (
                               <GameCard
                                 activity={activity}
