@@ -13,7 +13,7 @@ export default async function Home() {
     return (
         <>
             <PageWrapper>
-                <main className={`flex min-h-[70vh] flex-col justify-center items-center text-center`}>
+                <main className={`flex min-h-[70dvh] flex-col justify-center items-center text-center`}>
                     <div className={`relative mb-2.5 transform cursor-pointer transition duration-500 hover:scale-105`}>
 
                         <Image

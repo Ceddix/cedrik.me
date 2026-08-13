@@ -39,8 +39,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${poppins.variable}`} data-scroll-behavior="smooth">
       <body className="font-sans bg-[#16161A]">
-        {/* Fixed background image with backdrop blur layer - locked to viewport */}
-        <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+        {/* Fixed background image with backdrop blur layer */}
+        <div className="fixed -inset-10 pointer-events-none overflow-hidden z-0">
           <Image
             src="/profile.png"
             alt="background"
@@ -48,8 +48,8 @@ export default function RootLayout({
             fill
             priority
             loading="eager"
-            sizes="100vw"
-            className="object-cover"
+            sizes="120vw"
+            className="object-cover scale-110"
           />
           <div
             className="absolute inset-0 bg-[#16161A]/80 backdrop-blur-2xl"
@@ -57,7 +57,7 @@ export default function RootLayout({
           />
         </div>
 
-        <div className="min-h-screen">
+        <div className="relative z-10 min-h-[100dvh]">
           {children}
           <Analytics />
         </div>

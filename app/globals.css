@@ -38,9 +38,12 @@
 
 }
 
+html,
 body {
   background-color: #16161a;
   color: #fff;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 /* Cursor */
