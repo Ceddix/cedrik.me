@@ -129,6 +129,8 @@ export default function AdminShortPage() {
       const data = await res.json();
       if (res.ok && data.success) {
         setAuthenticated(true);
+        setSecretKeyInput("");
+        setSecretError("");
         showToast("Logged in successfully!");
         fetchLinks(1, "");
       } else {
@@ -146,6 +148,8 @@ export default function AdminShortPage() {
     await fetch("/api/auth/logout", { method: "POST" });
     setAuthenticated(false);
     setLinks([]);
+    setSecretKeyInput("");
+    setSecretError("");
     showToast("Logged out");
   };
 
@@ -341,6 +345,7 @@ export default function AdminShortPage() {
                   </div>
                   <input
                     type="password"
+                    autoComplete="current-password"
                     value={secretKeyInput}
                     onChange={(e) => setSecretKeyInput(e.target.value)}
                     placeholder="Enter Secret Key"
@@ -530,7 +535,27 @@ export default function AdminShortPage() {
               </div>
             </div>
 
-            {links.length === 0 ? (
+            {fetchingLinks && links.length === 0 ? (
+              <div className="bg-neutral-800/40 border border-gray-300/20 rounded-3xl overflow-hidden backdrop-blur-2xl shadow-2xl p-6 space-y-4">
+                <div className="flex items-center justify-center gap-2 text-zinc-400 py-4">
+                  <TbRefresh className="text-xl animate-spin text-emerald-400" />
+                  <span className="text-sm font-medium">Loading shortened URLs...</span>
+                </div>
+                <div className="space-y-3">
+                  {[...Array(4)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-12 w-full rounded-2xl bg-zinc-800/40 border border-zinc-700/30 animate-pulse flex items-center justify-between px-4"
+                    >
+                      <div className="h-4 w-28 bg-zinc-700/60 rounded-md" />
+                      <div className="h-4 w-48 bg-zinc-700/40 rounded-md hidden sm:block" />
+                      <div className="h-4 w-12 bg-zinc-700/50 rounded-full" />
+                      <div className="h-4 w-16 bg-zinc-700/40 rounded-md" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : links.length === 0 ? (
               <div className="bg-neutral-800/30 border border-gray-300/10 rounded-3xl p-12 text-center text-zinc-500 backdrop-blur-xl">
                 <TbLink className="text-4xl mx-auto mb-2 text-zinc-600" />
                 <p className="text-sm">No shortened links found.</p>
