@@ -37,3 +37,4 @@ next-env.d.ts
 /.backup/
 /.idea/
 /package-lock.json
+/types/react-icons.d.ts

@@ -18,6 +18,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -44,11 +45,5 @@ body {
 
 /* Cursor */
 .typed-cursor {
-    color: rgba(255, 255, 255, .75);
-}
-
-/* Marquee scroll for overflowing text */
-@keyframes marquee {
-  0%, 15% { transform: translateX(0); }
-  85%, 100% { transform: translateX(-50%); }
+  color: rgba(255, 255, 255, .75);
 }

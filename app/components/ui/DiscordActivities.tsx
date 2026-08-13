@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLanyard } from "use-lanyard";
 import { SITE_CONFIG } from "@/app/lib/config";
 import { IoGameController } from "react-icons/io5";
@@ -52,6 +52,16 @@ function formatTime(ms: number): string {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
+/** Generate a stable key for an activity */
+function getActivityKey(activity: any, index: number): string {
+  if (activity._type === "spotify") return "spotify";
+  return (
+    activity.id ||
+    activity.session_id ||
+    `${activity.name}-${activity.application_id || index}`
+  );
+}
+
 // ─── Click-outside hook ──────────────────────────────────────────────────────
 
 function useClickOutside(
@@ -74,6 +84,10 @@ function useClickOutside(
 
 // ─── Scrolling text component ────────────────────────────────────────────────
 
+const SCROLL_SPEED = 25; // pixels per second
+const PAUSE_DURATION = 3000; // ms to pause at start/end
+const GAP_WIDTH = 40; // px gap between repeated text
+
 function ScrollingText({
   text,
   className,
@@ -82,15 +96,75 @@ function ScrollingText({
   className?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLSpanElement>(null);
+  const measureRef = useRef<HTMLSpanElement>(null);
   const [overflows, setOverflows] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const animRef = useRef<number>(0);
+  const phaseRef = useRef<"pause-start" | "scrolling" | "pause-end">("pause-start");
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastTimeRef = useRef<number>(0);
+  // Store the scroll distance so it doesn't change mid-animation
+  const scrollDistRef = useRef(0);
 
+  // Measure overflow using a hidden measurement span (single copy of text)
   useEffect(() => {
     const container = containerRef.current;
-    const textEl = textRef.current;
-    if (!container || !textEl) return;
-    setOverflows(textEl.offsetWidth > container.offsetWidth);
+    const measureEl = measureRef.current;
+    if (!container || !measureEl) return;
+    const textWidth = measureEl.offsetWidth;
+    const containerWidth = container.offsetWidth;
+    const doesOverflow = textWidth > containerWidth;
+    setOverflows(doesOverflow);
+    setOffset(0);
+    phaseRef.current = "pause-start";
+    // Distance to scroll = single text width + gap
+    scrollDistRef.current = textWidth + GAP_WIDTH;
   }, [text]);
+
+  // Animation loop — runs forever while overflows is true
+  useEffect(() => {
+    if (!overflows) return;
+
+    const startPause = () => {
+      phaseRef.current = "pause-start";
+      setOffset(0);
+      timerRef.current = setTimeout(() => {
+        phaseRef.current = "scrolling";
+        lastTimeRef.current = performance.now();
+        animRef.current = requestAnimationFrame(tick);
+      }, PAUSE_DURATION);
+    };
+
+    const tick = (now: number) => {
+      if (phaseRef.current !== "scrolling") return;
+
+      const dt = now - lastTimeRef.current;
+      lastTimeRef.current = now;
+      const totalScroll = scrollDistRef.current;
+
+      setOffset((prev) => {
+        const next = prev + (SCROLL_SPEED * dt) / 1000;
+        if (next >= totalScroll) {
+          // Seamlessly loop: pause then restart
+          phaseRef.current = "pause-end";
+          timerRef.current = setTimeout(startPause, PAUSE_DURATION);
+          return 0;
+        }
+        return next;
+      });
+
+      if (phaseRef.current === "scrolling") {
+        animRef.current = requestAnimationFrame(tick);
+      }
+    };
+
+    startPause();
+
+    return () => {
+      cancelAnimationFrame(animRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [overflows, text]);
 
   return (
     <div
@@ -98,22 +172,30 @@ function ScrollingText({
       className={clsx(
         "overflow-hidden",
         overflows
-          ? "[mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+          ? "[mask-image:linear-gradient(to_right,black_0%,black_94%,transparent)]"
           : "[mask-image:linear-gradient(to_right,black,black_85%,transparent)]"
       )}
     >
+      {/* Hidden measurement span — single copy, not affected by duplication */}
       <span
-        ref={textRef}
-        className={clsx(
-          "inline-block whitespace-nowrap",
-          overflows && "animate-[marquee_10s_linear_infinite]",
-          className
-        )}
+        ref={measureRef}
+        className={clsx("inline-block whitespace-nowrap invisible absolute", className)}
+        aria-hidden
+      >
+        {text}
+      </span>
+      <span
+        className={clsx("inline-block whitespace-nowrap", className)}
+        style={
+          overflows
+            ? { transform: `translateX(-${offset}px)` }
+            : undefined
+        }
       >
         {text}
         {overflows && (
           <>
-            <span className="mx-4 opacity-40">·</span>
+            <span style={{ display: "inline-block", width: GAP_WIDTH }} />
             {text}
           </>
         )}
@@ -259,7 +341,7 @@ function SpotifyCard({
         />
         {/* Progress bar */}
         <div className="flex items-center gap-1.5 mt-0.5 pr-1">
-          <span className="text-[0.5rem] text-gray-500 tabular-nums shrink-0">
+          <span className="text-[0.55rem] font-mono text-gray-400 tabular-nums shrink-0 min-w-[2.2em] text-right">
             {formatTime(currentMs)}
           </span>
           <div className="flex-1 h-[3px] rounded-full bg-white/10 overflow-hidden">
@@ -268,7 +350,7 @@ function SpotifyCard({
               style={{ width: `${progress * 100}%` }}
             />
           </div>
-          <span className="text-[0.5rem] text-gray-500 tabular-nums shrink-0">
+          <span className="text-[0.55rem] font-mono text-gray-400 tabular-nums shrink-0 min-w-[2.2em]">
             {formatTime(duration)}
           </span>
         </div>
@@ -303,19 +385,23 @@ function GameCard({
   const details = activity.details;
   const state = activity.state;
 
+  // Determine if we have a renderable large image
+  // Check for large_image regardless of application_id
+  const hasLargeImage = !!activity.assets?.large_image;
+  const largeImageUrl = hasLargeImage
+    ? getAssetUrl(activity.application_id, activity.assets.large_image)
+    : "";
+
   return (
     <div className="flex flex-row items-center gap-2.5 w-full h-full">
       {/* Game icon */}
       <div className="relative shrink-0">
-        {activity.application_id && activity.assets?.large_image ? (
+        {hasLargeImage && largeImageUrl ? (
           <>
             <img
-              src={getAssetUrl(
-                activity.application_id,
-                activity.assets?.large_image
-              )}
+              src={largeImageUrl}
               alt={activity.name}
-              className="size-12 rounded-full border border-white/12.5 shadow-md"
+              className="size-12 rounded-full border border-white/12.5 shadow-md object-cover"
             />
             {activity.assets?.small_image && (
               <img
@@ -324,7 +410,7 @@ function GameCard({
                   activity.assets.small_image
                 )}
                 alt=""
-                className="absolute -bottom-0.5 -right-0.5 size-5 rounded-full border-2 border-neutral-800 shadow-md"
+                className="absolute -bottom-0.5 -right-0.5 size-5 rounded-full border-2 border-neutral-800 shadow-md object-cover"
               />
             )}
           </>
@@ -335,17 +421,26 @@ function GameCard({
         )}
       </div>
 
-      {/* Game info */}
-      <div className="text-xs flex-1 min-w-0 [mask-image:linear-gradient(to_right,black,black_85%,transparent)]">
+      {/* Game info — use ScrollingText for overflow */}
+      <div className="text-xs flex-1 min-w-0">
         <p className="text-[0.6rem] text-neutral-400 truncate">
           Playing
         </p>
-        <p className="text-white truncate">
-          <b>{activity.name}</b>
-        </p>
-        <p className="text-gray-300 text-[0.65rem] truncate">
-          {details || state || (elapsed ? `for ${elapsed}` : "Active")}
-        </p>
+        <ScrollingText
+          text={activity.name}
+          className="text-white text-xs font-bold"
+        />
+        {(details || state) && (
+          <ScrollingText
+            text={details || state}
+            className="text-gray-300 text-[0.65rem]"
+          />
+        )}
+        {!(details || state) && elapsed && (
+          <p className="text-gray-300 text-[0.65rem] truncate">
+            for {elapsed}
+          </p>
+        )}
         {(details || state) && elapsed && (
           <p className="text-gray-500 text-[0.55rem] truncate">
             for {elapsed}
@@ -364,13 +459,45 @@ export default function DiscordActivities() {
   const activitiesRaw = socket?.activities || [];
   const lanyardSpotify = socket?.spotify;
 
-  const [activities, setActivities] = useState<any[]>([]);
+  const isDiscordOnline =
+    status === "online" || status === "idle" || status === "dnd";
+
   const [expanded, setExpanded] = useState(false);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [spotifyFallback, setSpotifyFallback] =
     useState<SpotifyFallback | null>(null);
+  const [ready, setReady] = useState(false);
+
+  // Cache latest Lanyard Spotify track data to bridge offline transitions seamlessly
+  const cachedSpotifyRef = useRef<SpotifyFallback | null>(null);
+
+  if (lanyardSpotify) {
+    const start = lanyardSpotify.timestamps?.start;
+    const end = lanyardSpotify.timestamps?.end;
+    cachedSpotifyRef.current = {
+      isPlaying: true,
+      title: lanyardSpotify.song || "",
+      artist: lanyardSpotify.artist || "",
+      album: lanyardSpotify.album || "",
+      albumArt: lanyardSpotify.album_art_url || "",
+      trackId: lanyardSpotify.track_id || "",
+      progress: start ? Math.max(0, Date.now() - start) : 0,
+      duration: start && end ? Math.max(0, end - start) : 0,
+      fetchedAt: Date.now(),
+    };
+  } else if (isDiscordOnline) {
+    // If user is online on Discord and not playing Spotify, clear the cache immediately
+    cachedSpotifyRef.current = null;
+  }
 
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setExpanded(false));
+
+  // ── Delay showing until social links have animated (first load only) ──
+  useEffect(() => {
+    const timer = setTimeout(() => setReady(true), 1800);
+    return () => clearTimeout(timer);
+  }, []);
 
   // ── Spotify API fallback polling ──
   const fetchSpotify = useCallback(async () => {
@@ -380,33 +507,32 @@ export default function DiscordActivities() {
       if (data.isPlaying) {
         data.fetchedAt = Date.now();
         setSpotifyFallback(data);
+        cachedSpotifyRef.current = data;
       } else {
         setSpotifyFallback(null);
+        cachedSpotifyRef.current = null;
       }
     } catch {
       setSpotifyFallback(null);
+      cachedSpotifyRef.current = null;
     }
   }, []);
 
   useEffect(() => {
-    if (lanyardSpotify) {
+    // If Discord is online, Lanyard WebSocket handles Spotify in real-time
+    if (isDiscordOnline) {
       setSpotifyFallback(null);
       return;
     }
 
+    // Discord is offline: poll Spotify API
     fetchSpotify();
     const interval = setInterval(fetchSpotify, 10_000);
     return () => clearInterval(interval);
-  }, [lanyardSpotify, fetchSpotify]);
+  }, [isDiscordOnline, fetchSpotify]);
 
-  const activitiesKey = JSON.stringify({
-    lanyardSpotify,
-    spotifyFallback,
-    activitiesRaw,
-  });
-
-  // ── Build activity list ──
-  useEffect(() => {
+  // ── Synchronously derive activity list (preserving user selection) ──
+  const activities = useMemo(() => {
     const list: any[] = [];
 
     if (lanyardSpotify) {
@@ -422,19 +548,20 @@ export default function DiscordActivities() {
         timestampStart: lanyardSpotify.timestamps?.start,
         timestampEnd: lanyardSpotify.timestamps?.end,
       });
-    } else if (spotifyFallback) {
+    } else if (!isDiscordOnline && (spotifyFallback || cachedSpotifyRef.current)) {
+      const activeFallback = spotifyFallback || cachedSpotifyRef.current!;
       list.push({
         _type: "spotify",
         _source: "api",
         name: "Spotify",
-        song: spotifyFallback.title,
-        artist: spotifyFallback.artist,
-        album: spotifyFallback.album,
-        albumArt: spotifyFallback.albumArt,
-        trackId: spotifyFallback.trackId,
-        apiProgress: spotifyFallback.progress,
-        apiDuration: spotifyFallback.duration,
-        fetchedAt: spotifyFallback.fetchedAt,
+        song: activeFallback.title,
+        artist: activeFallback.artist,
+        album: activeFallback.album,
+        albumArt: activeFallback.albumArt,
+        trackId: activeFallback.trackId,
+        apiProgress: activeFallback.progress,
+        apiDuration: activeFallback.duration,
+        fetchedAt: activeFallback.fetchedAt,
       });
     }
 
@@ -445,143 +572,159 @@ export default function DiscordActivities() {
       }
     }
 
-    setActivities(list);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activitiesKey]);
+    // Preserve user's selected activity at the front
+    if (selectedKey) {
+      const selectedIdx = list.findIndex(
+        (a, i) => getActivityKey(a, i) === selectedKey
+      );
+      if (selectedIdx > 0) {
+        const [selected] = list.splice(selectedIdx, 1);
+        list.unshift(selected);
+      }
+    }
+
+    return list;
+  }, [lanyardSpotify, isDiscordOnline, spotifyFallback, activitiesRaw, selectedKey]);
 
   const getAssetUrl = (applicationId?: string, assetId?: string) => {
     if (!assetId) return "";
     if (assetId.startsWith("mp:external/")) {
       // Remove the prefix to get the original URL
-      // ex: "mp:external/https://image.com/pic.png" -> "https://image.com/pic.png"
-      const match = assetId.match(/(https?)\/(.*)/);
+      // ex: "mp:external/https/image.com/pic.png" -> "https://image.com/pic.png"
+      const match = assetId.match(/mp:external\/(https?)\/(.*)/);
       if (match) {
         return decodeURIComponent(`${match[1]}://${match[2]}`);
       }
     }
     // Handle standard Discord assets (default behavior)
-    return `https://cdn.discordapp.com/app-assets/${applicationId}/${assetId}.png`;
+    if (applicationId) {
+      return `https://cdn.discordapp.com/app-assets/${applicationId}/${assetId}.png`;
+    }
+    return "";
   };
 
-  const selectActivity = (activity: any) => {
-    const reordered = [
-      activity,
-      ...activities.filter((a) => a !== activity),
-    ];
-    setActivities(reordered);
+  const selectActivity = (activity: any, index: number) => {
+    const key = getActivityKey(activity, index);
+    setSelectedKey(key);
     setExpanded(false);
   };
 
-  if (activities.length === 0) return null;
+  if (!ready) return null;
 
   return (
-    <LayoutGroup>
-      <motion.div
-        ref={ref}
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[240px]"
-      >
-        <div
-          onMouseEnter={() => setExpanded(true)}
-          onMouseLeave={() => setExpanded(false)}
-          onClick={() => setExpanded((p) => !p)}
-          className="relative cursor-pointer"
-        >
-          <div
-            className={clsx(
-              "flex flex-col-reverse items-center",
-              expanded && "gap-2.5"
-            )}
+    <AnimatePresence>
+      {activities.length > 0 && (
+        <LayoutGroup>
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
+            transition={{ duration: 0.4 }}
+            className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[240px]"
           >
-            <AnimatePresence initial={false}>
-              {activities.map((activity, index) => {
-                const isSpotify = activity._type === "spotify";
-                const key = isSpotify
-                  ? "spotify"
-                  : activity.id ||
-                  activity.session_id ||
-                  `${activity.name}-${activity.application_id || index}`;
+            <div
+              onMouseEnter={() => setExpanded(true)}
+              onMouseLeave={() => setExpanded(false)}
+              className="relative"
+            >
+              <div
+                className={clsx(
+                  "flex flex-col-reverse items-center",
+                  expanded && "gap-2.5"
+                )}
+              >
+                <AnimatePresence initial={false} mode="popLayout">
+                  {activities.map((activity, index) => {
+                    const isSpotify = activity._type === "spotify";
+                    const key = getActivityKey(activity, index);
+                    const isTop = index === 0;
+                    const isStacked = !expanded && !isTop;
 
-                const isStacked = !expanded && index !== 0;
-
-                return (
-                  <motion.div
-                    key={key}
-                    layout
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{
-                      opacity: 1,
-                      scale: expanded ? 1 : 1 - index * 0.04,
-                      y: expanded ? 0 : -index * 10,
-                      zIndex: 50 - index,
-                    }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 350,
-                      damping: 25,
-                    }}
-                    className={clsx(
-                      "w-full",
-                      isStacked && "absolute bottom-0"
-                    )}
-                    // Mask stacked background cards: only show the top peek
-                    style={
-                      isStacked
-                        ? {
-                          maskImage:
-                            "linear-gradient(to bottom, black 10px, transparent 20px)",
-                          WebkitMaskImage:
-                            "linear-gradient(to bottom, black 10px, transparent 20px)",
-                        }
-                        : undefined
-                    }
-                  >
-                    <motion.li
-                      whileTap={{ scale: 0.97 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        selectActivity(activity);
-                      }}
-                      className={
-                        "list-none rounded-3xl border-2 border-gray-300/30 bg-neutral-700/40 pl-1.5 py-1.5 pr-3 shadow-lg w-full h-[72px] flex items-center overflow-hidden transition duration-200 ease-in-out hover:bg-neutral-600/60"
-                      }
-                    >
-                      <div
+                    return (
+                      <motion.div
+                        key={key}
+                        layout
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{
+                          opacity: 1,
+                          scale: expanded ? 1 : 1 - index * 0.04,
+                          y: expanded ? 0 : -index * 10,
+                          zIndex: 50 - index,
+                        }}
+                        exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 350,
+                          damping: 25,
+                        }}
                         className={clsx(
-                          "flex flex-row items-center gap-2.5 w-full h-full transition-opacity duration-200",
-                          isStacked && "opacity-0"
+                          "w-full",
+                          isStacked && "absolute bottom-0"
                         )}
+                        // Soft gradient mask: clean top peek with gentle taper to hide borders inside top card
+                        style={
+                          isStacked
+                            ? {
+                              maskImage:
+                                "linear-gradient(to bottom, black 0px, black 8px, rgba(0,0,0,0.4) 16px, transparent 28px)",
+                              WebkitMaskImage:
+                                "linear-gradient(to bottom, black 0px, black 8px, rgba(0,0,0,0.4) 16px, transparent 28px)",
+                            }
+                            : undefined
+                        }
                       >
-                        {isSpotify ? (
-                          <SpotifyCard
-                            song={activity.song}
-                            artist={activity.artist}
-                            albumArt={activity.albumArt}
-                            trackId={activity.trackId}
-                            timestampStart={activity.timestampStart}
-                            timestampEnd={activity.timestampEnd}
-                            apiProgress={activity.apiProgress}
-                            apiDuration={activity.apiDuration}
-                            fetchedAt={activity.fetchedAt}
-                          />
-                        ) : (
-                          <GameCard
-                            activity={activity}
-                            getAssetUrl={getAssetUrl}
-                          />
-                        )}
-                      </div>
-                    </motion.li>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
-        </div>
-      </motion.div>
-    </LayoutGroup>
+                        <motion.li
+                          whileTap={{ scale: 0.97 }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (isTop) {
+                              // Top card: toggle expand/collapse
+                              setExpanded((p) => !p);
+                            } else {
+                              // Background card: select this activity
+                              selectActivity(activity, index);
+                            }
+                          }}
+                          className={clsx(
+                            "list-none rounded-3xl border-2 border-gray-300/30 bg-neutral-700/40 pl-1.5 py-1.5 pr-3 shadow-lg w-full h-[72px] flex items-center overflow-hidden transition duration-200 ease-in-out hover:bg-neutral-600/60",
+                            isTop ? "cursor-pointer" : "cursor-pointer"
+                          )}
+                        >
+                          <motion.div
+                            animate={{ opacity: expanded || isTop ? 1 : 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="flex flex-row items-center gap-2.5 w-full h-full"
+                          >
+                            {isSpotify ? (
+                              <SpotifyCard
+                                song={activity.song}
+                                artist={activity.artist}
+                                albumArt={activity.albumArt}
+                                trackId={activity.trackId}
+                                timestampStart={activity.timestampStart}
+                                timestampEnd={activity.timestampEnd}
+                                apiProgress={activity.apiProgress}
+                                apiDuration={activity.apiDuration}
+                                fetchedAt={activity.fetchedAt}
+                              />
+                            ) : (
+                              <GameCard
+                                activity={activity}
+                                getAssetUrl={getAssetUrl}
+                              />
+                            )}
+                          </motion.div>
+                        </motion.li>
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
+            </div>
+          </motion.div>
+        </LayoutGroup>
+      )}
+    </AnimatePresence>
   );
 }
