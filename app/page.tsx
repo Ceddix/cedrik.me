@@ -1,33 +1,33 @@
-import React from "react";
-
 import Image from "next/image";
 import Link from "next/link";
 import PageWrapper from "@/app/components/PageWrapper";
 
 import SocialLinks from "@/app/components/ui/SocialLinks";
 import DiscordStatus from "@/app/components/ui/DiscordStatus";
-import { age } from "@/app/components/Constants";
+import DiscordActivities from "@/app/components/ui/DiscordActivities";
+import { getAge } from "@/app/lib/age";
 import { TbArrowNarrowRight } from "react-icons/tb";
 
-export default function Home() {
+export default async function Home() {
+    const userAge = await getAge();
     return (
-        // Activity
-
         <>
             <PageWrapper>
-                <main className={`flex min-h-[70vh] flex-col justify-center items-center text-center`}>
+                <main className={`flex min-h-[70dvh] flex-col justify-center items-center text-center`}>
                     <div className={`relative mb-2.5 transform cursor-pointer transition duration-500 hover:scale-105`}>
 
                         <Image
                             src={`/profile.png`}
                             alt={`profile`}
-                            className={`rounded-full border-8 border-zinc-800 object-cover`}
+                            className={`rounded-full border-6 border-zinc-800/90 object-cover shadow-md`}
                             quality={100}
+                            priority
+                            loading="eager"
                             width={170}
                             height={170}
                         />
 
-                        <DiscordStatus/>
+                        <DiscordStatus />
 
                     </div>
 
@@ -36,14 +36,14 @@ export default function Home() {
 
                     <div className={`text-[1.2rem] text-gray-300`}>
                         <span className={`font-bold`}>hi, i'm cedrik, </span>
-                        a {age.toString()} y/o student from belgium
+                        a {userAge.toString()} y/o student from belgium
                     </div>
 
                     <div className={"w-full max-w-[31.15rem] px-9"}>
                         <Link
                             href={"/about"}
                             className={
-                                "group my-2.5 inline-block w-full rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg transition duration-200 ease-in-out hover:bg-neutral-600/60 focus:bg-neutral-900/60 focus:outline-hidden focus:ring-0 active:bg-neutral-950"
+                                "group my-3 inline-block w-full rounded-2xl border-2 border-gray-300/30 bg-neutral-700/40 py-2 text-md leading-normal text-gray-200 shadow-lg transition duration-200 ease-in-out hover:bg-neutral-600/60 focus:bg-neutral-900/60 focus:outline-hidden focus:ring-0 active:bg-neutral-950"
                             }
                         >
                             about me
@@ -53,10 +53,11 @@ export default function Home() {
                         </Link>
                     </div>
 
-                    <SocialLinks/>
+                    <SocialLinks />
 
                 </main>
             </PageWrapper>
+            <DiscordActivities />
         </>
     );
 }

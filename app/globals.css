@@ -18,6 +18,7 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -37,12 +38,15 @@
 
 }
 
+html,
 body {
   background-color: #16161a;
   color: #fff;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 /* Cursor */
 .typed-cursor {
-    color: rgba(255, 255, 255, .75);
+  color: rgba(255, 255, 255, .75);
 }
