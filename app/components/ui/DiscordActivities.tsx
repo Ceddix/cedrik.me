@@ -83,29 +83,65 @@ function useClickOutside(
   }, [ref, cb]);
 }
 
-// ─── Scrolling text component ────────────────────────────────────────────────
+// ─── Scrolling text component (synchronized) ────────────────────────────────
 
 const SCROLL_SPEED = 25; // pixels per second
 const PAUSE_DURATION = 3000; // ms to pause at start/end
 const GAP_WIDTH = 40; // px gap between repeated text
 
+/**
+ * Sync group: paired ScrollingText instances (e.g. title + artist) register
+ * their raw text widths here. The group computes a shared scroll distance
+ * (max text width + GAP) so every member scrolls the same total distance,
+ * keeping them perfectly in lockstep. Shorter texts get a wider gap to
+ * compensate, so the duplicate text always appears left-aligned.
+ */
+interface ScrollSyncGroup {
+  /** Map of member-id → raw text width (px, without gap) */
+  textWidths: Map<string, number>;
+  /** max(all text widths) + GAP_WIDTH — the shared scroll distance */
+  getMaxScrollDist(): number;
+}
+
+function useScrollSyncGroup(): React.RefObject<ScrollSyncGroup> {
+  return useRef<ScrollSyncGroup>({
+    textWidths: new Map(),
+    getMaxScrollDist() {
+      let maxWidth = 0;
+      for (const w of this.textWidths.values()) {
+        if (w > maxWidth) maxWidth = w;
+      }
+      return maxWidth + GAP_WIDTH;
+    },
+  });
+}
+
 function ScrollingText({
   text,
   className,
+  syncGroup,
+  syncId,
 }: {
   text: string;
   className?: string;
+  /** Optional sync group — when provided, this text scrolls the same distance
+   *  as the longest sibling, with a wider gap to compensate */
+  syncGroup?: React.RefObject<ScrollSyncGroup>;
+  /** Unique id within the sync group (e.g. "title" / "artist") */
+  syncId?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const measureRef = useRef<HTMLSpanElement>(null);
   const [overflows, setOverflows] = useState(false);
   const [offset, setOffset] = useState(0);
+  const [gapWidth, setGapWidth] = useState(GAP_WIDTH);
   const animRef = useRef<number>(0);
   const phaseRef = useRef<"pause-start" | "scrolling" | "pause-end">("pause-start");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTimeRef = useRef<number>(0);
   // Store the scroll distance so it doesn't change mid-animation
   const scrollDistRef = useRef(0);
+  const textWidthRef = useRef(0);
 
   // Measure overflow using a hidden measurement span (single copy of text)
   useEffect(() => {
@@ -118,9 +154,43 @@ function ScrollingText({
     setOverflows(doesOverflow);
     setOffset(0);
     phaseRef.current = "pause-start";
-    // Distance to scroll = single text width + gap
+    textWidthRef.current = textWidth;
+
+    // Default scroll distance (used when no sync group)
     scrollDistRef.current = textWidth + GAP_WIDTH;
-  }, [text]);
+
+    // Register raw text width with sync group
+    if (syncGroup?.current && syncId) {
+      if (doesOverflow) {
+        syncGroup.current.textWidths.set(syncId, textWidth);
+      } else {
+        syncGroup.current.textWidths.delete(syncId);
+      }
+    }
+
+    // Defer scroll-distance & gap computation to next frame so all siblings
+    // in the sync group have registered their widths first
+    if (doesOverflow && syncGroup?.current && syncId) {
+      requestAnimationFrame(() => {
+        if (!syncGroup.current) return;
+        const maxDist = syncGroup.current.getMaxScrollDist();
+        scrollDistRef.current = maxDist;
+        // Wider gap for shorter texts: maxDist - ownTextWidth
+        setGapWidth(maxDist - textWidth);
+      });
+    } else {
+      setGapWidth(GAP_WIDTH);
+    }
+  }, [text, syncGroup, syncId]);
+
+  // Unregister on unmount
+  useEffect(() => {
+    return () => {
+      if (syncGroup?.current && syncId) {
+        syncGroup.current.textWidths.delete(syncId);
+      }
+    };
+  }, [syncGroup, syncId]);
 
   // Animation loop — runs forever while overflows is true
   useEffect(() => {
@@ -146,7 +216,6 @@ function ScrollingText({
       setOffset((prev) => {
         const next = prev + (SCROLL_SPEED * dt) / 1000;
         if (next >= totalScroll) {
-          // Seamlessly loop: pause then restart
           phaseRef.current = "pause-end";
           timerRef.current = setTimeout(startPause, PAUSE_DURATION);
           return 0;
@@ -196,7 +265,7 @@ function ScrollingText({
         {text}
         {overflows && (
           <>
-            <span style={{ display: "inline-block", width: GAP_WIDTH }} />
+            <span style={{ display: "inline-block", width: gapWidth }} />
             {text}
           </>
         )}
@@ -204,6 +273,7 @@ function ScrollingText({
     </div>
   );
 }
+
 
 // ─── Spotify progress hook ───────────────────────────────────────────────────
 
@@ -301,6 +371,7 @@ function SpotifyCard({
     apiDuration,
     fetchedAt
   );
+  const syncGroup = useScrollSyncGroup();
 
   const duration = timestampEnd && timestampStart
     ? timestampEnd - timestampStart
@@ -335,10 +406,14 @@ function SpotifyCard({
         <ScrollingText
           text={song}
           className="text-white text-xs font-bold"
+          syncGroup={syncGroup}
+          syncId="title"
         />
         <ScrollingText
           text={formatArtists(artist)}
           className="text-gray-300 text-[0.65rem]"
+          syncGroup={syncGroup}
+          syncId="artist"
         />
         {/* Progress bar */}
         <div className="flex items-center gap-1.5 mt-0.5 pr-1">
@@ -382,6 +457,7 @@ function GameCard({
   getAssetUrl: (appId?: string, assetId?: string) => string;
 }) {
   const elapsed = useElapsedTime(activity.timestamps?.start);
+  const syncGroup = useScrollSyncGroup();
 
   const details = activity.details;
   const state = activity.state;
@@ -430,11 +506,15 @@ function GameCard({
         <ScrollingText
           text={activity.name}
           className="text-white text-xs font-bold"
+          syncGroup={syncGroup}
+          syncId="title"
         />
         {(details || state) && (
           <ScrollingText
             text={details || state}
             className="text-gray-300 text-[0.65rem]"
+            syncGroup={syncGroup}
+            syncId="details"
           />
         )}
         {!(details || state) && elapsed && (
@@ -767,8 +847,8 @@ export default function DiscordActivities() {
                           y: expanded
                             ? 0
                             : introPeek
-                            ? -index * 22
-                            : -index * 11,
+                              ? -index * 22
+                              : -index * 11,
                           zIndex: 50 - index,
                         }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
