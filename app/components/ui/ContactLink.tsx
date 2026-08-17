@@ -3,13 +3,17 @@ import Link from "next/link";
 import {TbExternalLink} from "react-icons/tb";
 
 export const ContactLink = ({name, icon, link}: {name: string; icon: ReactElement<any>; link: string}) => {
+    const linkStr = typeof link === 'string' ? link : '';
 
     return (
-            <Link
-                className={`flex flex-row rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 p-4 text-md shadow-lg no-underline space-x-2 items-center`}
-                href={link}>
-                <div className={`text-3xl`}>{icon}</div>
-                <div>{name} <small className={`inline-flex`}><TbExternalLink /></small></div>
-            </Link>
+        <a
+            className={`flex flex-row rounded-sm border-2 border-gray-300/30 bg-neutral-700/40 p-4 text-md shadow-lg no-underline space-x-2 items-center`}
+            href={linkStr}
+            target={linkStr.startsWith("http") ? "_blank" : undefined}
+            rel={linkStr.startsWith("http") ? "noopener noreferrer" : undefined}
+        >
+            <div className={`text-3xl`}>{icon}</div>
+            <div>{name} <small className={`inline-flex`}><TbExternalLink /></small></div>
+        </a>
     );
 }

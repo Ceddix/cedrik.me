@@ -1,9 +1,8 @@
-import React from "react";
+import type { ReactNode } from "react";
 
 import "@/app/globals.css";
 import Image from "next/image";
 import { Analytics } from '@vercel/analytics/react';
-import DiscordActivities from "@/app/components/ui/DiscordActivities";
 
 import { Poppins } from "next/font/google";
 const poppins = Poppins({
@@ -35,34 +34,34 @@ export const metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
-    <html lang="en" className={`${poppins.variable}`}>
-      <body className={`font-sans`}>
-        <div className={`h-screen`}>
-
+    <html lang="en" className={`${poppins.variable}`} data-scroll-behavior="smooth">
+      <body className="font-sans bg-[#16161A]">
+        {/* Fixed background image with backdrop blur layer */}
+        <div className="fixed -inset-10 pointer-events-none overflow-hidden z-0">
           <Image
-            src={`/profile.png`}
-            alt={`background`}
+            src="/profile.png"
+            alt="background"
             quality={100}
             fill
-            sizes="100vw"
-            className={`object-cover`}
+            priority
+            loading="eager"
+            sizes="120vw"
+            className="object-cover scale-110"
           />
-
           <div
-            className={`h-screen bg-[#16161A]/80 backdrop-blur-2xl`}
-            style={{ boxShadow: "inset 0 0 20px 1px #141417" }}>
-
-            {children}
-            <Analytics />
-            {/* Discord Activities: WIP (see discord-activities branch) */}
-            {/*<DiscordActivities />*/}
-
-          </div>
-
+            className="absolute inset-0 bg-[#16161A]/80 backdrop-blur-2xl"
+            style={{ boxShadow: "inset 0 0 20px 1px #141417" }}
+          />
         </div>
+
+        <div className="relative z-10 min-h-[100dvh]">
+          {children}
+          <Analytics />
+        </div>
+
       </body>
     </html>
   );

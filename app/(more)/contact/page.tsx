@@ -1,4 +1,3 @@
-import React from "react";
 import { Poppins } from "next/font/google";
 import PageWrapper from "@/app/components/PageWrapper";
 import Link from "next/link";

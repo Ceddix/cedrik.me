@@ -1,9 +1,9 @@
-import React from "react";
+import type { ReactNode } from "react";
 
 import { NavBar } from "@/app/components/ui/NavBar";
 import PageWrapper from "@/app/components/PageWrapper";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
 
   return (
       <>
