@@ -160,7 +160,7 @@ function ScrollingText({
     scrollDistRef.current = textWidth + GAP_WIDTH;
 
     // Register raw text width with sync group
-    if (syncGroup?.current && syncId) {
+    if (syncGroup?.current?.textWidths && syncId) {
       if (doesOverflow) {
         syncGroup.current.textWidths.set(syncId, textWidth);
       } else {
@@ -170,9 +170,9 @@ function ScrollingText({
 
     // Defer scroll-distance & gap computation to next frame so all siblings
     // in the sync group have registered their widths first
-    if (doesOverflow && syncGroup?.current && syncId) {
+    if (doesOverflow && syncGroup?.current?.textWidths && syncId) {
       requestAnimationFrame(() => {
-        if (!syncGroup.current) return;
+        if (!syncGroup.current?.textWidths) return;
         const maxDist = syncGroup.current.getMaxScrollDist();
         scrollDistRef.current = maxDist;
         // Wider gap for shorter texts: maxDist - ownTextWidth
@@ -186,7 +186,7 @@ function ScrollingText({
   // Unregister on unmount
   useEffect(() => {
     return () => {
-      if (syncGroup?.current && syncId) {
+      if (syncGroup?.current?.textWidths && syncId) {
         syncGroup.current.textWidths.delete(syncId);
       }
     };
@@ -816,8 +816,12 @@ export default function DiscordActivities() {
             className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[240px]"
           >
             <div
-              onMouseEnter={() => setExpanded(true)}
-              onMouseLeave={() => setExpanded(false)}
+              onPointerEnter={(e) => {
+                if (e.pointerType === "mouse") setExpanded(true);
+              }}
+              onPointerLeave={(e) => {
+                if (e.pointerType === "mouse") setExpanded(false);
+              }}
               onTouchStart={handleTouchStart}
               onTouchEnd={handleTouchEnd}
               className="relative"
